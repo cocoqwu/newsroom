@@ -1,0 +1,190 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/*
+  Design tokens, measured from the live AGI House pages on Oct 22, 2026.
+  Workspace (agihouse.org/events): dark zinc scale, system font, SF Mono for numbers.
+  Blog preview (blog.agihouse.org): white page, Tenor Sans headings, Source Serif body.
+  See docs/screenshots/m1-*.png for the side-by-side check.
+*/
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* shadcn semantic colors, mapped to the zinc values below */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* AGI House workspace palette (Tailwind zinc) */
+  --color-page: #09090b;        /* zinc-950: page background */
+  --color-panel: #18181b;       /* zinc-900: cards and panels */
+  --color-fill: #27272a;        /* zinc-800: borders, fills, hover */
+  --color-fill-strong: #3f3f46; /* zinc-700 */
+  --color-text: #fafafa;        /* zinc-50: primary text */
+  --color-text-2: #a1a1aa;      /* zinc-400: secondary text */
+  --color-text-3: #71717a;      /* zinc-500: labels, tertiary */
+  --color-text-4: #52525b;      /* zinc-600 */
+  --color-rose: #fda4af;        /* rose-300: the one accent on their event dates */
+  --color-verified: #86efac;    /* green-300 */
+  --color-corrected: #fcd34d;   /* amber-300 */
+  --color-unverified: #fda4af;  /* rose-300 */
+
+  /* Blog palette */
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-ink-2: #555555;
+  --color-ink-3: #999999;
+  --color-rule: #e6e6e6;
+
+  /* Fonts */
+  --font-sans: -apple-system, "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+  --font-mono: "SF Mono", "Fira Code", "Fira Mono", Menlo, monospace;
+  --font-heading: var(--font-sans);
+  --font-tenor: var(--font-tenor-sans), "Tenor Sans", sans-serif;
+  --font-serif: var(--font-source-serif), "Source Serif Pro", Georgia, serif;
+  --font-franklin: var(--font-libre-franklin), "Libre Franklin", sans-serif;
+  --font-montserrat: var(--font-montserrat-sans), Montserrat, sans-serif;
+
+  /* Radii: 8px on cards and inputs, pills on buttons */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 8px;
+  --radius-2xl: 12px;
+  --radius-3xl: 16px;
+  --radius-4xl: 9999px;
+}
+
+/* The workspace is always dark: these are the zinc values from agihouse.org/events. */
+:root {
+  --radius: 0.5rem;
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #18181b;
+  --card-foreground: #fafafa;
+  --popover: #18181b;
+  --popover-foreground: #fafafa;
+  --primary: #fafafa;
+  --primary-foreground: #09090b;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --accent: #27272a;
+  --accent-foreground: #fafafa;
+  --destructive: #fda4af;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #52525b;
+  --chart-1: #fafafa;
+  --chart-2: #a1a1aa;
+  --chart-3: #71717a;
+  --chart-4: #52525b;
+  --chart-5: #3f3f46;
+  --sidebar: #09090b;
+  --sidebar-foreground: #fafafa;
+  --sidebar-primary: #fafafa;
+  --sidebar-primary-foreground: #09090b;
+  --sidebar-accent: #18181b;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: #27272a;
+  --sidebar-ring: #52525b;
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply bg-page text-text font-sans antialiased;
+  }
+  body {
+    @apply bg-page text-text;
+  }
+  /* Pill-shaped buttons, like "Sign in" and "Upcoming" on the live site */
+  [data-slot="button"] {
+    border-radius: 9999px;
+  }
+  /* 8px cards with a hairline border */
+  [data-slot="card"] {
+    border-radius: 8px;
+    --tw-ring-color: #27272a;
+  }
+  [data-slot="input"], [data-slot="textarea"] {
+    border-radius: 8px;
+  }
+}
+
+@layer components {
+  /* Small uppercase section label: "NEXT UP", "QUICK LINKS" */
+  .section-label {
+    @apply text-[10px] font-semibold uppercase tracking-[0.12em] text-text-3;
+  }
+  .num {
+    @apply font-mono tabular-nums;
+  }
+  /* Blog preview typography (blog.agihouse.org) */
+  .blog {
+    @apply bg-paper text-ink font-serif;
+  }
+  .blog h1 {
+    @apply font-tenor font-normal uppercase text-[54px] leading-[60px] tracking-normal;
+  }
+  .blog h2 {
+    @apply font-tenor font-normal uppercase text-[30px] leading-[36px] mt-5 mb-5;
+  }
+  .blog h3 {
+    @apply font-tenor font-normal uppercase text-[22px] leading-[28px] mt-5 mb-3;
+  }
+  .blog p, .blog li {
+    @apply font-serif text-[18px] leading-[30px] my-[15px];
+  }
+  .blog li { @apply my-2.5; }
+  .blog ul { @apply list-disc pl-10; }
+  .blog ol { @apply list-decimal pl-10; }
+  .blog a { @apply text-[#0000ee] underline; }
+  .blog blockquote { @apply border-l-2 border-ink pl-5 italic; }
+  .blog-label {
+    @apply font-franklin text-[10px] leading-3 font-semibold uppercase tracking-[1px];
+  }
+  .blog code {
+    @apply font-mono text-[15px] bg-[#f2f2f2] px-1 py-0.5 rounded-sm;
+  }
+  .blog pre {
+    @apply font-mono text-[14px] leading-6 bg-[#f6f6f6] border border-rule p-4 overflow-x-auto my-5;
+  }
+  /* Claims highlighted in the draft preview */
+  .claim-unverified { @apply bg-[#ffe4e6] border-b-2 border-[#fb7185]; }
+  .claim-corrected { @apply bg-[#fef3c7] border-b-2 border-[#f59e0b]; }
+}

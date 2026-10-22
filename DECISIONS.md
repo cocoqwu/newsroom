@@ -59,3 +59,27 @@ Decisions 4 and 5 above are **superseded** by 7 to 10.
 - **Chose:** every model call records model, input and output tokens, and list-price cost; each pipeline run sums them and the Today screen shows the run cost. Images append to `docs/image-spend-log.md`. Prices live in one config table (`config/pricing.ts` at build time; the smoke test carries the same numbers).
 - **Why:** the spec asks for cost per run, and Coco asked to keep spend low and log it. Free-tier calls cost $0 in reality; showing the list price keeps the number honest for the day billing is turned on.
 - **Alternative:** reading actual charges from Google Cloud billing. Not possible from the API key alone.
+
+## Overnight build, Oct 22, 2026 (unattended)
+
+### 11. Scaffold copied in from a temp folder
+- **Chose:** run `create-next-app` in the scratch folder and copy the result into `newsroom/`.
+- **Why:** create-next-app refuses a folder that already holds SPEC.md and scripts.
+- **Alternative:** hand-writing the Next config. More error-prone.
+
+### 12. Next's cache components mode turned off
+- **Chose:** `cacheComponents: false` in next.config.
+- **Why:** every workspace page reads the SQLite file per request; the experimental cache mode would
+  require Suspense boundaries or "use cache" on each data read, which adds risk for no demo benefit.
+- **Alternative:** keep it on and wrap reads. Not worth it overnight.
+
+### 13. Screenshots via local Chrome headless
+- **Chose:** `scripts/screenshot.mjs` drives the Chrome already installed on the Mac.
+- **Why:** full-resolution 1440px PNGs without installing Playwright's browsers (hundreds of MB).
+- **Alternative:** the Browser pane's own screenshots (800px wide, fine for checks, small for docs).
+
+### 14. Style decisions from the live CSS
+- Labels use the events page's exact recipe (10px, 600, 0.12em). The blog's small labels use Libre
+  Franklin (category) and Montserrat (author, date) as on the live post. The only accent color is
+  rose-300, which the events page uses for dates; Newsroom uses it for the wildcard tag and
+  unverified claims. Sidebar nav "Events" links out to the real site; "Newsroom" is our section.
