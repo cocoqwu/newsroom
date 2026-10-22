@@ -95,10 +95,15 @@ Do not copy AGI House's logo or present this as an official AGI House product. U
 4. Publish screen (mocked send), demo mode with a saved snapshot, README with screenshots.
 5. Final pass: run the full pipeline once more, click through the whole demo flow in the Browser pane, fix anything rough, and finish MORNING_REPORT.md with a step-by-step demo script I can rehearse.
 
-## Amendments (added Oct 21, 2026 after pre-flight, from Coco's follow-up messages)
-These override the Stack and Pipeline sections above where they conflict.
+## Amendments (Oct 21–22, 2026, from Coco's follow-up messages after pre-flight)
+These override the Stack, Pipeline and Images sections above where they conflict.
 
-1. **No Anthropic key is available. Use the Gemini API instead for all text models**, through the official `@google/genai` TypeScript SDK, on the free tier: a Flash-Lite model for high-volume triage and scoring, a Flash model for research, drafting and fact-checking. Pro models have no free tier, so don't use them. Keep every model call behind one small provider interface so Anthropic can be added later by config.
-2. **No web search tool.** Google Search grounding is paid-only on Gemini, so the research step fetches the collected stories' own source pages directly instead of searching the web. Local embeddings for clustering stay as specified.
-3. **Google Cloud credits ($50) are for image generation only.** Add real AI-generated hero images as a fourth option next to the three SVG headers, using a Gemini image model (Nano Banana family) on Vertex AI in Coco's Google Cloud project. Read the credentials from `.env.local` (`GOOGLE_CLOUD_API_KEY`, `GOOGLE_CLOUD_PROJECT`). Cap image spend at about $5 for the whole build (`IMAGE_BUDGET_USD`) and log every generation with its cost. If Google auth fails or needs a browser login, skip this feature, note it in MORNING_REPORT.md, and keep building. It must never block anything else.
-4. Text calls must never use the Google Cloud key, and image calls must never use the free-tier key.
+1. **No Anthropic key. All model calls use the Gemini API** through the official `@google/genai` TypeScript SDK, with the single key `GEMINI_API_KEY` in `.env.local`. Checked Oct 22: the key is on the **free tier** (Pro and image models return a free-tier quota error). No Google Cloud service account and no Vertex AI: Coco's account blocks key creation there.
+2. **Model roles**, chosen from the models this key can reach, overridable in `.env.local`:
+   - triage, scoring, borderline-cluster checks: `gemini-3.5-flash-lite` (fast, cheap)
+   - research, drafting, fact-check: `gemini-3.8-flash` (the strongest Flash on the free tier; Gemini Pro needs billing, so use it only if `GEMINI_DRAFT_MODEL` is set to a Pro model)
+   - hero images: `gemini-nano-banana-2.1` through the same Gemini API
+   Keep every call behind **one provider interface** so Anthropic or another provider can be swapped in by config.
+3. **No web search tool** (Google Search grounding is paid-only). Research fetches each story's own source pages. Local embeddings through transformers.js stay as specified.
+4. **Images.** The three SVG headers stay the default. The AI hero image is a fourth card that calls the Gemini image model behind the same interface. Image models are not on the free tier, so on this key the card shows "not available on this key: enable billing on the key's Google Cloud project to turn it on", with the model name and price per image, and MORNING_REPORT.md says so. It must never block anything else. Cap image spend at `IMAGE_BUDGET_USD` ($5) and log every generated image with its list price in `docs/image-spend-log.md`.
+5. **Cost.** Keep spend low. Log token usage and list-price cost per pipeline run and show it in the UI (free-tier runs cost $0 in practice; the list price keeps the number meaningful once billing is on). Respect free-tier rate limits: batch items per call, back off on 429, and fall back to recorded mock responses behind the same interface when limits hit, saying so in the UI and the report.

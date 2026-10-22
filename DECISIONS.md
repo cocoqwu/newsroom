@@ -35,3 +35,27 @@ Format: what was chosen, why, and the alternative that was not taken.
 ### 6. Git identity set per repo
 - **Chose:** `git config user.name "Coco Wu"` and the account email, local to this repo only.
 - **Why:** no global identity existed and commits need one. Nothing outside the project folder was changed.
+
+## Oct 22, 2026, late evening (Coco present): one Gemini key for everything
+
+Decisions 4 and 5 above are **superseded** by 7 to 10.
+
+### 7. Single Gemini key, Gemini Developer API, no Vertex AI
+- **Chose:** every model call, text and image, goes through the Gemini API with `GEMINI_API_KEY`.
+- **Why:** Coco's Google account blocks service-account key creation, which ruled out the Vertex AI route. The pasted key was tested against both endpoints: the Gemini API accepts it (63 models visible); Vertex rejects it because that API is not enabled on the key's project.
+- **Alternative:** the two-key Vertex plan from decision 4. Dropped at Coco's request.
+
+### 8. Drafting runs on Gemini 3.8 Flash, not a Pro model
+- **Chose:** `gemini-3.8-flash` for research, drafting and fact-checking; `gemini-3.5-flash-lite` for triage and scoring.
+- **Why:** a tiny test call to `gemini-3.1-pro-preview` returned HTTP 429 "free_tier ... limit: 0", which means the key's project has no billing account and Pro models are unavailable. 3.8 Flash is the newest and strongest Flash the key can use. Both test calls passed (structured JSON from Flash-Lite in under a second).
+- **Alternative:** enable billing on the key's Google Cloud project, then set `GEMINI_DRAFT_MODEL=gemini-3.1-pro-preview` ($2 in / $12 out per 1M tokens). The code reads the override, so no code change is needed.
+
+### 9. AI hero image is built but inactive on this key
+- **Chose:** the fourth image card calls `gemini-nano-banana-2.1` ($0.0336 per 1K image, the cheapest current image model) behind the same image interface as the SVG generator. On this key it shows a clear "enable billing to turn on" state instead of failing.
+- **Why:** the one-image test returned the same free-tier 429. Google lists no image model as free. Coco asked that this feature never block the build.
+- **To turn it on:** link a billing account to the key's project in the Google Cloud console and rerun `node scripts/check-keys.mjs --image-only`. Note Google's billing docs say Cloud trial credits cannot be spent on the Gemini API, so this would bill a card at list price. The $5 cap in `IMAGE_BUDGET_USD` is enforced in code.
+
+### 10. Cost logging
+- **Chose:** every model call records model, input and output tokens, and list-price cost; each pipeline run sums them and the Today screen shows the run cost. Images append to `docs/image-spend-log.md`. Prices live in one config table (`config/pricing.ts` at build time; the smoke test carries the same numbers).
+- **Why:** the spec asks for cost per run, and Coco asked to keep spend low and log it. Free-tier calls cost $0 in reality; showing the list price keeps the number honest for the day billing is turned on.
+- **Alternative:** reading actual charges from Google Cloud billing. Not possible from the API key alone.
