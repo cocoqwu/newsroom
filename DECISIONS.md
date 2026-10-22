@@ -83,3 +83,20 @@ Decisions 4 and 5 above are **superseded** by 7 to 10.
   Franklin (category) and Montserrat (author, date) as on the live post. The only accent color is
   rose-300, which the events page uses for dates; Newsroom uses it for the wildcard tag and
   unverified claims. Sidebar nav "Events" links out to the real site; "Newsroom" is our section.
+
+### 15. Rank the 72-hour window, not only new items
+- **Chose:** every run builds stories from all items published in the lookback window; new items are inserted, known ones reused.
+- **Why:** "safe to rerun" has to mean a second run the same day still shows a full digest. Strictly "new since last run" would give an empty Today screen on rerun.
+- **Alternative:** strict delta plus carrying forward yesterday's stories. More state, same demo.
+
+### 16. Sources with no feed stay in the config, marked disabled
+- **Chose:** Anthropic, xAI (no RSS) and VentureBeat (429 for bots) keep an entry with a `disabled` reason, shown as "no feed" in the run summary.
+- **Why:** honesty in the UI about what is not covered, and a slot for a future HTML adapter.
+- **Alternative:** scrape their news pages. Skipped: the spec asks for feeds and official APIs.
+
+### 17. Judge batching and the free-tier cap
+- **Chose:** 8 stories per judge call, at most 12 calls per run (`JUDGE_MAX_CALLS`), ordered by a cheap heuristic so the likely-important stories are judged first; the rest keep heuristic values.
+- **Why:** free-tier rate limits and a demo-friendly run time (about 100 s). Cost at list price: about 3 cents per run.
+
+### 18. Two rubric tweaks after the first real run
+- Significance: a lone arXiv preprint with no pickup is capped near 0.45. Event tie-in: one generic keyword gives 0.4, two or more give 1.0. Both because the first digest was all single-source papers with "event tie-in 1.0" from the word "agent".

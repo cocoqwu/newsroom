@@ -1,0 +1,9 @@
+{
+  "task": "cluster-check",
+  "model": "gemini-3.5-flash-lite",
+  "promptPreview": "For each pair, answer whether A and B are the same story.\n\n1. A: \"How NVIDIA OpenShell Reference Architecture Secures and Governs AI Agent Workloads at Scale\" (",
+  "text": "{\"same\": [false, false, false, false, false, false, false, false, false, false, false, true, false, true, true]}",
+  "tokensIn": 896,
+  "tokensOut": 34,
+  "createdAt": "2026-10-22T08:13:43.047Z"
+}

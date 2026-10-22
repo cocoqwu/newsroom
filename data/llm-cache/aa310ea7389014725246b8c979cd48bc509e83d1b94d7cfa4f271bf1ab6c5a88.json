@@ -1,0 +1,9 @@
+{
+  "task": "cluster-check",
+  "model": "gemini-3.5-flash-lite",
+  "promptPreview": "For each pair, answer whether A and B are the same story.\n\n1. A: \"The bridge to agent-scale Git infrastructure\" (Hacker News)\n   B: \"feder-cr/git-ai: Git design",
+  "text": "{\"same\": [false]}",
+  "tokensIn": 119,
+  "tokensOut": 6,
+  "createdAt": "2026-10-22T08:13:47.476Z"
+}

@@ -1,0 +1,9 @@
+{
+  "task": "smoke",
+  "model": "gemini-3.5-flash-lite",
+  "promptPreview": "Classify this headline for an AI research blog: 'DeepMind releases a new world model for robotics'. Return JSON with theme and relevance (0-100).",
+  "text": "{\n  \"theme\": \"Robotics\",\n  \"relevance\": 95\n}",
+  "tokensIn": 35,
+  "tokensOut": 21,
+  "createdAt": "2026-10-22T08:00:57.752Z"
+}
