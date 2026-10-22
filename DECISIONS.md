@@ -123,3 +123,7 @@ Decisions 4 and 5 above are **superseded** by 7 to 10.
 - **Chose:** demo mode (and outage fallback) replays a recorded response only when model, prompt and schema match exactly; otherwise a labeled heuristic answers and the UI says so ("heuristic placeholder", "no model was reachable").
 - **Why:** the first version replayed the newest response for the same task, which put the NVIDIA Cosmos outline on a different story. Wrong content with a confident face is worse than an honest placeholder.
 - **Consequence for the demo:** the recorded story (the one in the snapshot) replays every step; picking a new story in demo mode shows placeholders. The demo script uses the recorded story.
+
+### 24. Chain adjusted after the final run
+- `gemini-2.5-flash` returned 404 "no longer available to new users", so the draft chain is now 3.8 Flash → 3.6 Flash → 3.7 Flash → Flash-Lite, and a 404 puts a model on cooldown like a spent quota.
+- One model output carried a control character inside "Lovász"; it was cleaned in the database by hand. Roadmap item: strip control characters from model text in the provider layer.

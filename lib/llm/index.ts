@@ -30,7 +30,7 @@ export function modelFor(role: "triage" | "draft"): string {
 // All of these have a free tier. The last resort for drafting is the triage model.
 export function modelChain(role: "triage" | "draft"): string[] {
   const chain = role === "draft"
-    ? [defaultModels.draft, "gemini-3.6-flash", "gemini-2.5-flash", defaultModels.triage]
+    ? [defaultModels.draft, "gemini-3.6-flash", "gemini-3.7-flash", defaultModels.triage]
     : [defaultModels.triage, "gemini-3.1-flash-lite", "gemini-2.5-flash-lite"];
   return [...new Set(chain)];
 }
@@ -100,7 +100,9 @@ export async function generateText(opts: GenerateOpts & { fallback: () => string
         } catch (e) {
           lastError = (e as Error).message;
           console.warn(`[llm] ${opts.task} on ${m} failed: ${lastError.slice(0, 160)}`);
-          if ((e as { status?: number }).status === 429) markCooldown(m, lastError);
+          const st = (e as { status?: number }).status;
+          if (st === 429) markCooldown(m, lastError);
+          if (st === 404) markCooldown(m, "daily: model not available"); // retired model: skip it for the day
           // A zero free-tier quota or an invalid request will not improve with another model of the same kind.
           if (/API key not valid|PERMISSION_DENIED/.test(lastError)) break;
         }

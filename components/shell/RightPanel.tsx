@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AssistantPanel } from "./AssistantPanel";
 import { useAssistant } from "@/lib/assistant-store";
 import { ExternalLink } from "lucide-react";
@@ -10,9 +10,11 @@ import { SectionLabel } from "./SectionLabel";
 // The Assistant tab becomes live on the Draft screen (milestone 3); elsewhere it explains the page.
 export function RightPanel() {
   const a = useAssistant();
-  const [tab, setTab] = useState<"assistant" | "links">("links");
-  // The Draft screen registers itself in the assistant store; switch to the Assistant tab then.
-  useEffect(() => { setTab(a.draftId ? "assistant" : "links"); }, [a.draftId]);
+  // Default tab follows the page: Assistant on a Draft screen, Links elsewhere. A manual choice
+  // sticks only while the same draft is open.
+  const [choice, setChoice] = useState<{ forDraft: number | null; tab: "assistant" | "links" } | null>(null);
+  const tab = choice && choice.forDraft === a.draftId ? choice.tab : a.draftId ? "assistant" : "links";
+  const setTab = (t: "assistant" | "links") => setChoice({ forDraft: a.draftId, tab: t });
   return (
     <aside className="sticky top-0 hidden h-screen flex-col bg-page px-5 py-3 lg:flex">
       <div className="flex items-center justify-end gap-1">

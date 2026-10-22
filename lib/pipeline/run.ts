@@ -98,8 +98,6 @@ function finish(runId: number, startedAt: string, t0: number, notes: Record<stri
     .where(eq(schema.llmCalls.runId, runId))
     .get();
   const costUsd = Number(usage?.cost ?? 0);
-  const itemsCollected = db.select({ n: sql<number>`count(*)` }).from(schema.items).get()?.n ?? 0;
-  void itemsCollected;
   db.update(schema.runs)
     .set({ status: "done", finishedAt: nowIso(), storiesCount, tokensIn: Number(usage?.tin ?? 0), tokensOut: Number(usage?.tout ?? 0), costUsd, notes: JSON.stringify(notes) })
     .where(eq(schema.runs.id, runId))

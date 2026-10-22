@@ -1,0 +1,9 @@
+{
+  "task": "revise",
+  "model": "gemini-3.6-flash",
+  "promptPreview": "Instruction: Tighten this paragraph\n\nThe editor selected this part: \"First proposed in 1995, the KLS conjecture establishes tight bounds on the isoperimetric co",
+  "text": "Proposed in 1995, the KLS conjecture bounds the isoperimetric constant of log-concave probability measures in high-dimensional spaces. It asks whether a hyperplane cut is always nearly as effective as the best cut of any shape.",
+  "tokensIn": 537,
+  "tokensOut": 1088,
+  "createdAt": "2026-10-22T08:51:33.007Z"
+}

@@ -1,7 +1,7 @@
 # Morning report: Newsroom
 
 Updated after every milestone so it is accurate even if the build stopped early.
-Last update: **after milestone 4** (publish screen, demo mode, README).
+Last update: **after milestone 5** (final pass). Build exits 0; the full pipeline command ran end to end three times tonight.
 
 ## Status at a glance
 
@@ -11,7 +11,23 @@ Last update: **after milestone 4** (publish screen, demo mode, README).
 | 2. Today screen on real data (collect, cluster, rank) | **Done** |
 | 3. Draft flow (outline, cited draft, fact-check, images) | **Done** |
 | 4. Publish screen, demo mode, README | **Done** |
-| 5. Final pass and demo script | Not started |
+| 5. Final pass and demo script | **Done** |
+
+## Final state (milestone 5)
+
+- Final live run (run 3, Oct 22, 1:47 AM local): 280 items from 17 of 21 sources, 269 stories,
+  14 model calls, $0.03 at list price, 66 seconds. The Today screen shows it.
+- Demo story: rank 5, "Solving the 31-year-old KLS conjecture in high-dimensional mathematics"
+  (Microsoft Research), picked as a research brief with an angle note. The flow ran live through the API: outline (Gemini 3.6 Flash after the 3.8 quota),
+  18 research claims from 5 sections, a 1,114-word draft with inline links (3.6 Flash), a 14-claim
+  fact-check (all verified; this one ran on Flash-Lite because 3.6 Flash was overloaded at that
+  moment), one assistant revision ("Tighten this paragraph", v2), newsletter and social snippets,
+  and a logged mock send. A stray control character the model put in "Lovász" was cleaned by hand.
+- `data/demo-snapshot.json` was re-saved from this run and this draft, so demo mode shows exactly
+  what is described here.
+- Gemini 3.8 Flash's free-tier daily quota ran out during the build; the app now puts a model on
+  cooldown until midnight Pacific when that happens, and the next Flash model answers. You will
+  see "fallback from gemini-3.8-flash" in the model-call log for tonight's drafts.
 
 ## What works
 
@@ -72,7 +88,14 @@ Last update: **after milestone 4** (publish screen, demo mode, README).
 
 ## Screenshots (docs/screenshots)
 
-| Today (real run) | Score breakdown expanded |
+Final pass (milestone 5): `m5-today.png`, `m5-draft.png`, `m5-preview.png`, `m5-publish.png`,
+`m5-drafts.png`. Earlier milestones below.
+
+| Today (final run) | Draft (demo story) | Blog preview (demo story) | Publish (demo story) |
+|---|---|---|---|
+| ![](docs/screenshots/m5-today.png) | ![](docs/screenshots/m5-draft.png) | ![](docs/screenshots/m5-preview.png) | ![](docs/screenshots/m5-publish.png) |
+
+| Today (milestone 2) | Score breakdown expanded |
 |---|---|
 | ![](docs/screenshots/m2-today.png) | ![](docs/screenshots/m2-today-breakdown.jpg) |
 
@@ -123,9 +146,48 @@ Live path (free-tier Gemini key in .env.local): `npm run pipeline` (about 2 minu
 `npm run dev -- --port 3100`. The draft flow then makes real model calls; expect 20 to 60 seconds
 per step and the occasional fallback to a smaller Flash model (shown in the step detail).
 
-The step-by-step demo script arrives with milestone 5.
+## Demo script (about 8 minutes)
+
+Rehearse once in demo mode, then decide live or demo on the day. The recorded story is the one
+with an "Open draft" button on the Today screen.
+
+1. **Frame it (30 s).** "AGI House publishes long technical primers before events. This tool turns
+   the daily flood of AI news into publish-ready drafts, and the editor makes two calls: which
+   story, and whether the draft is ready." Point at the sidebar: Newsroom sits next to Events,
+   same shell as the AGI House app.
+2. **Today (2 min).** Read the run summary out loud: when it collected, items, stories after
+   clustering, model calls, cost. Open "Sources" to show 21 sources and the honest "no feed"
+   rows. Open the breakdown on card 1: seven signals, each with a value, a weight and a note; say
+   theme fit and significance come from a model judge with a written rubric, the rest are
+   computed. Show "covered before" and the wildcard in slot 10. Click Skip on one card (logged),
+   then Pick on the recorded story: choose a format, type an angle note.
+3. **Draft, step 1 (1 min).** The proposed title, thesis and outline. Edit a bullet to show it is
+   editable. "Nothing expensive runs until I approve this." Click approve.
+   - Live: the progress list runs research → write → fact-check (1 to 3 minutes). Talk through
+     what each step does while it runs.
+   - Demo: the recorded draft is already there; scroll to Step 2.
+4. **Draft, step 2 (2 min).** Preview: the blog's own look (Tenor Sans, Source Serif), inline
+   links to primary sources, and the highlighted claims. Fact-check tab: verified, corrected,
+   unverified, each with its source; "a separate model call that did not write the draft".
+   Images: three generated SVG headers plus the AI card that says exactly why it is off on this
+   key. Select a paragraph in the preview, click "Tighten this paragraph" in the Assistant panel:
+   only that paragraph changes, a new version appears in Versions.
+5. **Publish (1 min).** Download Markdown or HTML. "Send to blog as draft" is a mock: show the
+   exact Webflow payload and the four follow-ups a real integration needs. Generate the newsletter
+   blurb and social posts.
+6. **Close (30 s).** Real versus mocked (README table), cost per run on the free tier, and the
+   roadmap: scheduled run + Slack digest, real Webflow publishing, weights that learn from picks.
+
+If the network or the API fails live, switch to demo mode: stop the server, `npm run demo:load`,
+`npm run demo`. Everything above still works from the recording.
 
 ## What failed
+
+- `gemini-2.5-flash` is "no longer available to new users" (404) on this key; removed from the
+  fallback chain in favor of 3.7 Flash. The chain now also puts a 404 model on cooldown.
+- The fact-check for the demo draft ran on Flash-Lite (3.8 quota out, 3.6 overloaded at that
+  second). It verified all 14 claims; a stronger model would likely have flagged one or two. Re-run
+  it from the Fact-check tab when the Flash models are free.
 
 - A batch of database writes was lost once during a dev-server restart (DECISIONS.md #20). The
   db client now checkpoints every 4 s and closes cleanly; `scripts/dev-restart.sh` waits for the

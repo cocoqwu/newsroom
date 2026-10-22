@@ -30,7 +30,7 @@ node scripts/screenshot.mjs <url> <out.png>   # 1440px PNG via local Chrome head
 - Pipeline in `lib/pipeline`; draft steps in `lib/draft` (outline → research → write → factcheck →
   revise); header images in `lib/images`; exports (Markdown, HTML, Webflow payload, snippets) in
   `lib/export`. Sources, editorial profile, ranking weights and prices live in `config/`.
-- Model fallback: each role has a chain (draft: 3.8 Flash → 3.6 Flash → 2.5 Flash → Flash-Lite).
+- Model fallback: each role has a chain (draft: 3.8 Flash → 3.6 Flash → 3.7 Flash → Flash-Lite).
   A 503 "high demand" retries once after 3 s, then the next model takes the call.
 - SQLite runs in WAL mode with a 4-second checkpoint timer and a clean close on SIGTERM. Restart
   the dev server with `scripts/dev-restart.sh`, never by starting a second one on the same file.

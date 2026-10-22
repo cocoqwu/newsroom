@@ -1,0 +1,9 @@
+{
+  "task": "snippets",
+  "model": "gemini-3.5-flash-lite",
+  "promptPreview": "Post title: Resolving the KLS Conjecture: Human-AI Collaboration in Formal Geometry\nThesis: The recent resolution of the 1995 Kannan–Lov\u0011sz–Simonovits (KLS) con",
+  "text": "{\n  \"newsletter\": \"The recent resolution of the 1995 Kannan-Lovasz-Simonovits (KLS) conjecture marks a milestone in high-dimensional sampling and convex geometry. Achieved through a hybrid workflow combining human strategic guidance, agentic AI search tools, and Lean 4 formal verification, this breakthrough establishes precise mixing bounds for Markov Chain Monte Carlo algorithms. For builders, this project demonstrates a practical template for pairing probabilistic reasoning models with deterministic formal execution layers to solve complex algorithmic problems. Read the full post: [link]\",\n  \"social\": \"The complete proof of the 1995 KLS conjecture eliminates dimension dependence in high-dimensional sampling. The resolution was achieved using human-directed AI proof search and Lean 4 formal verification. #Math\",\n  \"linkedin\": \"The recent proof of the 1995 KLS conjecture resolves a long-standing bottleneck in high-dimensional probability theory and guarantees fast polynomial-time mixing rates for MCMC sampling algorithms.\\n\\nThis breakthrough was achieved through a hybrid workflow where human researchers directed macro-level proof strategy, AI tools handled symbolic derivations, and Lean 4 verified absolute correctness.\\n\\nHow are you integrating formal verification into your AI reasoning pipelines?\"\n}",
+  "tokensIn": 1678,
+  "tokensOut": 259,
+  "createdAt": "2026-10-22T08:51:42.420Z"
+}
