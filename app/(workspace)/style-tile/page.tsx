@@ -24,6 +24,11 @@ export default function StyleTile() {
       <div className="mx-auto max-w-[820px] px-6 py-6">
         <h2 className="text-[26px] font-semibold tracking-[-0.65px]">Newsroom design tokens</h2>
         <p className="mt-1 text-[14px] text-text-2">Measured from the live AGI House app and blog on Oct 22, 2026.</p>
+        <p className="mt-3 rounded-lg border border-fill bg-panel px-4 py-3 text-[13px] leading-5 text-text-2">
+          This page is a design check, not part of the editor flow. It puts every visual ingredient on one screen, colors, type, a button, a tag,
+          a story card and a blog heading, so they can be compared side by side with screenshots of agihouse.org/events and blog.agihouse.org.
+          The sample card and text below are placeholders.
+        </p>
 
         <SectionLabel className="mt-8 mb-3">Workspace colors</SectionLabel>
         <div className="grid grid-cols-7 gap-2">

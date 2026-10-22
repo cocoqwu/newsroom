@@ -9,10 +9,10 @@ export function RunSummary({ run, notes, cost }: { run: Run; notes: RunNotes; co
   const durationS = run.finishedAt ? Math.round((Date.parse(run.finishedAt) - Date.parse(run.startedAt)) / 1000) : null;
   const stats: [string, string, string?][] = [
     ["Collected", timeAgo(run.startedAt), fmtDateTime(run.startedAt)],
-    ["Items", String(run.itemsCollected), `last ${notes.lookbackHours ?? 72} h, ${ok}/${srcs.length} sources`],
+    ["Items", String(run.itemsCollected), `${ok} of ${srcs.length} sources, last ${notes.lookbackHours ?? 72} h`],
     ["Stories", String(run.storiesCount), notes.cluster ? `${notes.cluster.merged} merged by model check` : undefined],
     ["Model calls", String(cost.calls), `${(cost.tokensIn + cost.tokensOut).toLocaleString()} tokens`],
-    ["Run cost", money(cost.costUsd), run.mode === "demo" ? "demo snapshot" : "list price · free tier bills $0"],
+    ["Run cost", money(cost.costUsd), run.mode === "demo" ? "demo snapshot" : "list price; free tier bills $0"],
   ];
   return (
     <div className="rounded-lg border border-fill bg-panel">
@@ -21,7 +21,7 @@ export function RunSummary({ run, notes, cost }: { run: Run; notes: RunNotes; co
           <div key={label} className="px-4 py-3">
             <div className="section-label">{label}</div>
             <div className="num mt-1 text-[18px] font-semibold leading-6">{value}</div>
-            {sub ? <div className="mt-0.5 truncate text-[11px] text-text-3" title={sub}>{sub}</div> : null}
+            {sub ? <div className="mt-0.5 text-[11px] leading-4 text-text-3">{sub}</div> : null}
           </div>
         ))}
       </div>

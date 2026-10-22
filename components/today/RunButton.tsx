@@ -28,8 +28,8 @@ export function RunButton({ demo }: { demo: boolean }) {
   return (
     <div className="flex items-center gap-2">
       {msg ? <span className="text-[12px] text-text-3">{msg}</span> : null}
-      <Button variant="outline" size="sm" onClick={run} disabled={busy} title={demo ? "Demo mode replays saved responses; a live run needs NEWSROOM_MODE unset" : "Collect, cluster and rank now"}>
-        <RefreshCw className={`size-3.5 ${busy ? "animate-spin" : ""}`} /> {busy ? "Running pipeline…" : "Run pipeline"}
+      <Button variant="outline" size="sm" onClick={run} disabled={busy || demo} title={demo ? "Off in demo mode: a run would replace the recorded day. Use npm run pipeline for a live run." : "Collect, cluster and rank now (about 2 minutes)"}>
+        <RefreshCw className={`size-3.5 ${busy ? "animate-spin" : ""}`} /> {busy ? "Running pipeline…" : demo ? "Run pipeline (off in demo)" : "Run pipeline"}
       </Button>
     </div>
   );
