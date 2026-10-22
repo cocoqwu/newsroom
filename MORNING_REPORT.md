@@ -88,8 +88,9 @@ Last update: **after milestone 5** (final pass). Build exits 0; the full pipelin
 
 ## Screenshots (docs/screenshots)
 
-Final pass (milestone 5): `m5-today.png`, `m5-draft.png`, `m5-preview.png`, `m5-publish.png`,
-`m5-drafts.png`. Earlier milestones below.
+Final pass (milestone 5), one per screen: `m5-today.png`, `m5-draft.png`, `m5-preview.png`,
+`m5-publish.png` (publish detail), `m5-publish-index.png` (publish list), `m5-drafts.png`,
+`m5-style-tile.png`. Final `npm run build` exit code: 0. Earlier milestones below.
 
 | Today (final run) | Draft (demo story) | Blog preview (demo story) | Publish (demo story) |
 |---|---|---|---|
