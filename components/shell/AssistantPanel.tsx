@@ -25,7 +25,7 @@ export function AssistantPanel() {
       const res = await fetch(`/api/drafts/${a.draftId}/revise`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ selection: a.selection, instruction: ins }) });
       const data = (await res.json()) as { ok: boolean; error?: string; version: number; before: string; after: string; provider: string };
       if (!data.ok) throw new Error(data.error || "revision failed");
-      assistantStore.set({ history: [{ instruction: ins, before: data.before, after: data.after, version: data.version, provider: data.provider }, ...a.history], selection: "" });
+      assistantStore.set({ history: [{ instruction: ins, before: data.before, after: data.after, version: data.version, provider: data.provider }, ...a.history], selection: "", lastError: data.provider === "mock" ? (data.before === data.after ? "No model was reachable, so the paragraph was left unchanged (saved as a version anyway)." : "No model was reachable: applied a small heuristic edit instead.") : null });
       setInstruction("");
       router.refresh();
     } catch (e) {
@@ -72,7 +72,7 @@ export function AssistantPanel() {
           <ul className="flex flex-col gap-2">
             {a.history.map((h, i) => (
               <li key={i} className="rounded-lg border border-fill bg-panel p-3 text-[12px]">
-                <div className="text-text">{h.instruction} <span className="text-text-3">· v{h.version} · {h.provider}</span></div>
+                <div className="text-text">{h.instruction} <span className="text-text-3">· v{h.version} · {h.provider === "gemini" ? "Gemini" : h.provider === "replay" ? "recorded" : "heuristic"}</span></div>
                 <div className="mt-1 line-clamp-3 text-text-3">{h.after}</div>
               </li>
             ))}

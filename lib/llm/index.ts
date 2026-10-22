@@ -8,7 +8,7 @@ import { db, schema } from "@/lib/db/client";
 import { defaultModels, textCostUsd } from "@/config/pricing";
 import { GeminiProvider } from "./gemini";
 import type { GenerateOpts, GenerateResult } from "./provider";
-import { readExact, readLatestForTask, record } from "./replay";
+import { readExact, record } from "./replay";
 
 export type { GenerateOpts, Role } from "./provider";
 
@@ -36,6 +36,27 @@ export function modelChain(role: "triage" | "draft"): string[] {
 }
 
 type CallOpts<T> = GenerateOpts & { fallback: () => T };
+
+// Models that just answered "quota exhausted" are skipped for a while instead of costing a retry
+// on every call. Per-day quotas reset at midnight Pacific; anything else cools down 10 minutes.
+const cooldownUntil = new Map<string, number>();
+function markCooldown(model: string, message: string) {
+  const daily = /per_?day|PerDay|daily/i.test(message) || !/per_?minute|PerMinute/i.test(message);
+  const until = daily ? nextMidnightPacific() : Date.now() + 10 * 60 * 1000;
+  cooldownUntil.set(model, until);
+  console.warn(`[llm] ${model} on cooldown until ${new Date(until).toISOString()} (${daily ? "daily quota" : "rate limit"})`);
+}
+function nextMidnightPacific(): number {
+  const now = new Date();
+  const pacific = new Date(now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
+  const offsetMs = now.getTime() - pacific.getTime();
+  const midnight = new Date(pacific); midnight.setHours(24, 0, 0, 0);
+  return midnight.getTime() + offsetMs;
+}
+export function modelsAvailable(role: "triage" | "draft"): string[] {
+  const chain = modelChain(role).filter((m) => (cooldownUntil.get(m) ?? 0) < Date.now());
+  return chain.length ? chain : modelChain(role); // never empty: if everything is cooling down, try anyway
+}
 
 function logCall(opts: GenerateOpts, r: Omit<GenerateResult, "text">, ok: boolean, error?: string) {
   try {
@@ -70,7 +91,7 @@ export async function generateText(opts: GenerateOpts & { fallback: () => string
   if (mode === "live") {
     const g = getGemini();
     if (g) {
-      for (const m of modelChain(opts.role)) {
+      for (const m of modelsAvailable(opts.role)) {
         try {
           const r = await g.generate(opts, m);
           logCall(opts, r, true, m !== model ? `fallback from ${model}: ${lastError ?? ""}`.slice(0, 300) : undefined);
@@ -79,6 +100,7 @@ export async function generateText(opts: GenerateOpts & { fallback: () => string
         } catch (e) {
           lastError = (e as Error).message;
           console.warn(`[llm] ${opts.task} on ${m} failed: ${lastError.slice(0, 160)}`);
+          if ((e as { status?: number }).status === 429) markCooldown(m, lastError);
           // A zero free-tier quota or an invalid request will not improve with another model of the same kind.
           if (/API key not valid|PERMISSION_DENIED/.test(lastError)) break;
         }
@@ -88,7 +110,10 @@ export async function generateText(opts: GenerateOpts & { fallback: () => string
     }
   }
 
-  const exact = readExact(opts, model) ?? readLatestForTask(opts.task);
+  // Replay only an exact match (same model, prompt and schema). Replaying a "similar" response
+  // would put one story's outline or paragraph into another story, which is worse than a labeled
+  // heuristic. Try every model in the chain, since the recording may have come from a fallback.
+  const exact = modelChain(opts.role).map((m) => readExact(opts, m)).find(Boolean) ?? null;
   if (exact) {
     logCall(opts, { model: exact.model, provider: "replay", tokensIn: exact.tokensIn, tokensOut: exact.tokensOut, durationMs: 0 }, true, lastError);
     return { text: exact.text, provider: "replay", model: exact.model };

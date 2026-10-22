@@ -118,3 +118,8 @@ Decisions 4 and 5 above are **superseded** by 7 to 10.
 ### 22. Demo snapshot shifts dates to today
 - **Chose:** `demo:load` moves every timestamp so the saved run reads as "collected 20 minutes ago", marks the run `mode=demo` and keeps the original date in the run notes; the UI shows a "Demo snapshot" badge.
 - **Why:** a digest dated three days ago looks broken in a live demo; the badge keeps it honest.
+
+### 23. Replay is exact-match only
+- **Chose:** demo mode (and outage fallback) replays a recorded response only when model, prompt and schema match exactly; otherwise a labeled heuristic answers and the UI says so ("heuristic placeholder", "no model was reachable").
+- **Why:** the first version replayed the newest response for the same task, which put the NVIDIA Cosmos outline on a different story. Wrong content with a confident face is worse than an honest placeholder.
+- **Consequence for the demo:** the recorded story (the one in the snapshot) replays every step; picking a new story in demo mode shows placeholders. The demo script uses the recorded story.

@@ -5,7 +5,7 @@ import { generateJSON } from "@/lib/llm";
 import { editorialProfile } from "@/config/editorial-profile";
 import { loadDraftContext, sourceList, touch, type Outline } from "./context";
 
-export type OutlineProposal = { title: string; thesis: string; outline: Outline };
+export type OutlineProposal = { title: string; thesis: string; outline: Outline; provider?: string; model?: string };
 
 const schemaJson = {
   type: "object",
@@ -46,7 +46,7 @@ Return JSON: title (specific, under 80 characters, Title Case, no colon-heavy cl
   });
   const proposal = normalize(r.data, ctx.story.title, [...ctx.template.sections]);
   touch(draftId, { title: proposal.title, thesis: proposal.thesis, outline: JSON.stringify(proposal.outline), status: "outline" });
-  return proposal;
+  return { ...proposal, provider: r.provider, model: r.model };
 }
 
 function normalize(p: OutlineProposal, fallbackTitle: string, sections: string[]): OutlineProposal {

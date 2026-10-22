@@ -9,7 +9,7 @@ ready**; the app drafts, fact-checks, illustrates and exports the post.
 
 | Today: ranked digest | Draft: outline → cited draft → fact-check | Publish: exports, mock Webflow send, snippets |
 |---|---|---|
-| ![Today](docs/screenshots/m2-today.png) | ![Draft](docs/screenshots/m3-draft-preview.png) | ![Publish](docs/screenshots/m4-publish.png) |
+| ![Today](docs/screenshots/m2-today.png) | ![Draft](docs/screenshots/m3-blog-preview.png) | ![Publish](docs/screenshots/m4-publish.png) |
 
 ## What it does
 

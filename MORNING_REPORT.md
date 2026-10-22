@@ -1,7 +1,7 @@
 # Morning report: Newsroom
 
 Updated after every milestone so it is accurate even if the build stopped early.
-Last update: **after milestone 3** (draft flow).
+Last update: **after milestone 4** (publish screen, demo mode, README).
 
 ## Status at a glance
 
@@ -10,7 +10,7 @@ Last update: **after milestone 3** (draft flow).
 | 1. Design tokens and style tile, checked against live pages | **Done** |
 | 2. Today screen on real data (collect, cluster, rank) | **Done** |
 | 3. Draft flow (outline, cited draft, fact-check, images) | **Done** |
-| 4. Publish screen, demo mode, README | Not started |
+| 4. Publish screen, demo mode, README | **Done** |
 | 5. Final pass and demo script | Not started |
 
 ## What works
@@ -41,8 +41,17 @@ Last update: **after milestone 3** (draft flow).
   - Revision: selected a paragraph in the preview, clicked "Tighten this paragraph" in the
     Assistant panel; only that paragraph changed and v2 was saved. Versions tab restores any
     version; Edit Markdown saves manual edits as new versions.
-- **`/publish/[id]`** (built with milestone 3, verified in milestone 4): Markdown and HTML export,
-  the mock Webflow send with the exact payload, newsletter and social snippets.
+- **`/publish/[id]`**: Markdown (with front matter) and standalone HTML downloads; "Send to blog as
+  draft" is a mock that logs the action and shows the exact Webflow CMS API v2 request (draft
+  item, field data, image slot) with the follow-ups a real integration needs; newsletter blurb,
+  X post and LinkedIn note generated from the final text, editable, with copy buttons.
+- **Demo mode**: `npm run demo:load` restores `data/demo-snapshot.json` (one real day: the run,
+  280 items, 268 stories, the finished draft with versions, fact-check and images) with dates
+  shifted to today and a "Demo snapshot" badge; `npm run demo` starts the app with
+  `NEWSROOM_MODE=demo`, which makes no network calls: exact recorded responses are replayed, and
+  anything unrecorded uses a labeled heuristic. Verified on a scratch database: all pages, revise
+  and snippets replayed, AI image card says "demo mode".
+- **README.md** with a screenshot per screen, how to run, real-versus-mocked table and roadmap.
 
 ## What is mocked or unavailable
 
@@ -102,7 +111,19 @@ Libre Franklin and Montserrat 10px uppercase labels, 734px text column, 200px co
 
 ## How to run the demo
 
-Coming with milestone 4 (demo mode). For now: `npm run dev -- --port 3100` and open `/style-tile`.
+Safest path (no network, no key needed):
+
+```bash
+npm install
+npm run demo:load      # restores the saved real day; dates read as "today"
+npm run demo           # http://localhost:3100 in demo mode (recorded model responses)
+```
+
+Live path (free-tier Gemini key in .env.local): `npm run pipeline` (about 2 minutes), then
+`npm run dev -- --port 3100`. The draft flow then makes real model calls; expect 20 to 60 seconds
+per step and the occasional fallback to a smaller Flash model (shown in the step detail).
+
+The step-by-step demo script arrives with milestone 5.
 
 ## What failed
 

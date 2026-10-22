@@ -68,8 +68,8 @@ export class GeminiProvider implements LLMProvider {
         const msg = err?.message ?? String(e);
         const status = err?.status ?? (/\b(429|503|500)\b/.exec(msg)?.[1] ? Number(/\b(429|503|500)\b/.exec(msg)![1]) : undefined);
         const retryable = status === 429 || status === 503 || status === 500;
-        // Free tier with a zero quota for this model: retrying will not help.
-        const hardBlock = /limit:\s*0/.test(msg);
+        // A zero quota, or a per-day quota that is used up, will not clear by waiting a few seconds.
+        const hardBlock = /limit:\s*0/.test(msg) || (status === 429 && /per_?day|PerDay|daily/i.test(msg)) || (status === 429 && !/per_?minute|PerMinute/i.test(msg));
         const delays = delaysFor(status);
         if (!retryable || hardBlock || i >= delays.length) {
           throw new ProviderError(msg.slice(0, 400), status, retryable && !hardBlock);

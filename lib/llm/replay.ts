@@ -28,21 +28,6 @@ export function readExact(opts: GenerateOpts, model: string): Entry | null {
   try { return JSON.parse(fs.readFileSync(f, "utf8")) as Entry; } catch { return null; }
 }
 
-// Newest recorded response for the same task, used when the exact prompt differs
-// (for example the editor typed a different angle note in demo mode).
-export function readLatestForTask(task: string): Entry | null {
-  if (!fs.existsSync(CACHE_DIR)) return null;
-  let best: Entry | null = null;
-  for (const name of fs.readdirSync(CACHE_DIR)) {
-    if (!name.endsWith(".json")) continue;
-    try {
-      const e = JSON.parse(fs.readFileSync(path.join(CACHE_DIR, name), "utf8")) as Entry;
-      if (e.task === task && (!best || e.createdAt > best.createdAt)) best = e;
-    } catch { /* skip bad file */ }
-  }
-  return best;
-}
-
 export function record(opts: GenerateOpts, result: GenerateResult): void {
   fs.mkdirSync(CACHE_DIR, { recursive: true });
   const entry: Entry = {

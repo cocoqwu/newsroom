@@ -67,9 +67,15 @@ export function DraftWorkspace(p: WorkspaceProps) {
     return data;
   }
 
+  const [outlineNote, setOutlineNote] = useState<string | null>(null);
   async function proposeOutline() {
     setBusy("outline"); setError(null);
-    try { await post("outline"); router.refresh(); } catch (e) { setError((e as Error).message); } finally { setBusy(null); }
+    try {
+      const r = (await post("outline")) as { proposal?: { provider?: string; model?: string } };
+      const prov = r.proposal?.provider;
+      setOutlineNote(prov === "gemini" ? `Proposed by ${r.proposal?.model}` : prov === "replay" ? "Replayed from the recorded response (demo mode)" : "No model response available: this is a heuristic placeholder from the format template. Edit it, or retry when the model is reachable.");
+      router.refresh();
+    } catch (e) { setError((e as Error).message); } finally { setBusy(null); }
   }
 
   // Approve the outline, then run research → write → fact-check with visible progress.
@@ -164,6 +170,7 @@ export function DraftWorkspace(p: WorkspaceProps) {
         </div>
       ) : (
         <div className="rounded-lg border border-fill bg-panel p-5">
+          {outlineNote ? <div className="mb-3 text-[12px] text-text-3">{outlineNote}</div> : null}
           <div className="section-label mb-1.5">Title</div>
           <Input value={title} onChange={(e) => setTitle(e.target.value)} disabled={hasBody} className="text-[15px] font-semibold" />
           <div className="section-label mt-4 mb-1.5">Thesis</div>
