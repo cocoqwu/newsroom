@@ -94,3 +94,11 @@ Do not copy AGI House's logo or present this as an official AGI House product. U
 3. Draft flow working for one picked story: outline approval, cited draft, fact-check panel, three image options.
 4. Publish screen (mocked send), demo mode with a saved snapshot, README with screenshots.
 5. Final pass: run the full pipeline once more, click through the whole demo flow in the Browser pane, fix anything rough, and finish MORNING_REPORT.md with a step-by-step demo script I can rehearse.
+
+## Amendments (added Oct 21, 2026 after pre-flight, from Coco's follow-up messages)
+These override the Stack and Pipeline sections above where they conflict.
+
+1. **No Anthropic key is available. Use the Gemini API instead for all text models**, through the official `@google/genai` TypeScript SDK, on the free tier: a Flash-Lite model for high-volume triage and scoring, a Flash model for research, drafting and fact-checking. Pro models have no free tier, so don't use them. Keep every model call behind one small provider interface so Anthropic can be added later by config.
+2. **No web search tool.** Google Search grounding is paid-only on Gemini, so the research step fetches the collected stories' own source pages directly instead of searching the web. Local embeddings for clustering stay as specified.
+3. **Google Cloud credits ($50) are for image generation only.** Add real AI-generated hero images as a fourth option next to the three SVG headers, using a Gemini image model (Nano Banana family) on Vertex AI in Coco's Google Cloud project. Read the credentials from `.env.local` (`GOOGLE_CLOUD_API_KEY`, `GOOGLE_CLOUD_PROJECT`). Cap image spend at about $5 for the whole build (`IMAGE_BUDGET_USD`) and log every generation with its cost. If Google auth fails or needs a browser login, skip this feature, note it in MORNING_REPORT.md, and keep building. It must never block anything else.
+4. Text calls must never use the Google Cloud key, and image calls must never use the free-tier key.
