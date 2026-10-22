@@ -82,6 +82,7 @@ export const drafts = sqliteTable("drafts", {
   bodyMd: text("body_md"),
   currentVersion: integer("current_version").notNull().default(0),
   selectedImageId: integer("selected_image_id"),
+  snippets: text("snippets"), // JSON: { newsletter, social, generatedAt }
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });

@@ -1,0 +1,9 @@
+{
+  "task": "research",
+  "model": "gemini-3.5-flash-lite",
+  "promptPreview": "Post: Architecting Physical AI Systems with NVIDIA Cosmos World Models\nThesis: NVIDIA expanding the Cosmos platform provides robotics and simulation engineers w",
+  "text": "{\"claims\": [{\"claim\": \"NVIDIA expanded the Cosmos platform to include new training tools, simulation checkpoints, and Cosmos Data Factory blueprints.\", \"sourceUrl\": \"https://blogs.nvidia.com/blog/cosmos-open-train-evaluate-deploy-world-models\", \"excerpt\": \"NVIDIA has expanded the Cosmos platform with new training tools, simulation checkpoints and Cosmos Data Factory blueprints.\"}, {\"claim\": \"The NVIDIA Cosmos platform ranks in the top five on six different open models leaderboards.\", \"sourceUrl\": \"https://blogs.nvidia.com/blog/cosmos-open-train-evaluate-deploy-world-models\", \"excerpt\": \"Ranking top five on six different open models leaderboards, the NVIDIA Cosmos platform gives world model builders the frontier open models\"}, {\"claim\": \"Cosmos Data Factory offers five cloud-native blueprints available through GitHub, Microsoft Azure, Nebius, and CoreWeave.\", \"sourceUrl\": \"https://blogs.nvidia.com/blog/cosmos-open-train-evaluate-deploy-world-models\", \"excerpt\": \"Cosmos Data Factory now offers the following five cloud-native blueprints and is available through GitHub , Microsoft Azure , Nebius and CoreWeave\"}]}",
+  "tokensIn": 1571,
+  "tokensOut": 252,
+  "createdAt": "2026-10-22T08:27:51.319Z"
+}

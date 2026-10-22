@@ -100,3 +100,21 @@ Decisions 4 and 5 above are **superseded** by 7 to 10.
 
 ### 18. Two rubric tweaks after the first real run
 - Significance: a lone arXiv preprint with no pickup is capped near 0.45. Event tie-in: one generic keyword gives 0.4, two or more give 1.0. Both because the first digest was all single-source papers with "event tie-in 1.0" from the word "agent".
+
+### 19. Model fallback chain per role
+- **Chose:** draft role tries gemini-3.8-flash, then 3.6-flash, 2.5-flash, then the triage model; triage tries 3.5-flash-lite, 3.1-flash-lite, 2.5-flash-lite. One quick retry on 503, one 20 s retry on 429, then the next model.
+- **Why:** during the build, 3.8 Flash answered "high demand" (503) for minutes at a time. Without the chain the outline and draft fell back to the heuristic mock.
+- **Trade-off:** a draft written by a smaller model is shorter and plainer. The model that actually answered is logged per call and shown in the step detail.
+
+### 20. Database durability after a lost batch of writes
+- **What happened:** after restarting the dev server once, several minutes of committed writes (a draft body, claims, model-call rows) were missing, while the on-disk replay cache proved the calls had happened. A direct reproduction (write, kill, read) did not lose data, so the likely cause is the old and new server overlapping on the WAL file during a one-second restart.
+- **Chose:** `synchronous=FULL`, a passive WAL checkpoint every 4 s, a clean close on SIGTERM/SIGINT/exit, and `scripts/dev-restart.sh`, which waits for the port and the db file to be free before starting again.
+- **Safety net:** `npm run demo:load` restores the committed snapshot in seconds, so the live demo never depends on the local db surviving.
+
+### 21. Webflow "send" is a payload, not a request
+- **Chose:** build the exact Webflow CMS API v2 request (POST to the collection's items endpoint, `isDraft: true`, field data with slug, summary, body HTML, category, author, date, image slot) and show it in the UI; the button logs a mock send and transmits nothing.
+- **Why:** the spec calls for a mock, and the real call needs the AGI House site token and collection id. Showing the payload makes the handoff concrete for whoever wires it up.
+
+### 22. Demo snapshot shifts dates to today
+- **Chose:** `demo:load` moves every timestamp so the saved run reads as "collected 20 minutes ago", marks the run `mode=demo` and keeps the original date in the run notes; the UI shows a "Demo snapshot" badge.
+- **Why:** a digest dated three days ago looks broken in a live demo; the badge keeps it honest.

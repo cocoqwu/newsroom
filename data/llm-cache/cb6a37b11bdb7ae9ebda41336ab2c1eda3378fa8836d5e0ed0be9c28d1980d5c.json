@@ -1,0 +1,9 @@
+{
+  "task": "research",
+  "model": "gemini-3.5-flash-lite",
+  "promptPreview": "Post: NVIDIA Cosmos Expands Tools to Train and Deploy World Models\nThesis: To help developers rapidly build world models, which help physical AI systems underst",
+  "text": "{\"claims\": [{\"claim\": \"At GTC Berlin, NVIDIA extended Cosmos Framework training, optimization and deployment tools and recipes as agent skills to more open models, along with Cosmos 3.\", \"sourceUrl\": \"https://blogs.nvidia.com/blog/cosmos-open-train-evaluate-deploy-world-models\", \"excerpt\": \"At GTC Berlin, NVIDIA extended Cosmos Framework training, optimization and deployment tools and recipes as agent skills to more open models, along with Cosmos 3\"}, {\"claim\": \"NVIDIA expanded the Cosmos platform with new training tools, simulation checkpoints, and Cosmos Data Factory blueprints.\", \"sourceUrl\": \"https://blogs.nvidia.com/blog/cosmos-open-train-evaluate-deploy-world-models\", \"excerpt\": \"NVIDIA has expanded the Cosmos platform with new training tools, simulation checkpoints and Cosmos Data Factory blueprints.\"}, {\"claim\": \"Cosmos Data Factory offers five cloud-native blueprints available through GitHub, Microsoft Azure, Nebius, and CoreWeave.\", \"sourceUrl\": \"https://blogs.nvidia.com/blog/cosmos-open-train-evaluate-deploy-world-models\", \"excerpt\": \"Cosmos Data Factory now offers the following five cloud-native blueprints and is available through GitHub , Microsoft Azure , Nebius and CoreWeave\"}]}",
+  "tokensIn": 1556,
+  "tokensOut": 271,
+  "createdAt": "2026-10-22T08:23:58.777Z"
+}

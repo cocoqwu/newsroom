@@ -1,0 +1,9 @@
+{
+  "task": "revise",
+  "model": "gemini-3.6-flash",
+  "promptPreview": "Instruction: Tighten this paragraph\n\nThe editor selected this part: \"Traditionally, teams have relied on physics engines like NVIDIA Isaac Sim to procedurally g",
+  "text": "Teams traditionally rely on physics engines like NVIDIA Isaac Sim to procedurally generate synthetic training data. While ray-traced simulation provides ground-truth kinematics, manually constructing CAD assets, tuning contact materials, and configuring scene graphs creates a severe asset bottleneck. This limits how quickly developers can synthesize diverse, long-tail environments.",
+  "tokensIn": 537,
+  "tokensOut": 1213,
+  "createdAt": "2026-10-22T08:39:40.505Z"
+}

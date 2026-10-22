@@ -1,0 +1,9 @@
+{
+  "task": "research",
+  "model": "gemini-3.5-flash-lite",
+  "promptPreview": "Post: Architecting Physical AI Systems with NVIDIA Cosmos World Models\nThesis: NVIDIA expanding the Cosmos platform provides robotics and simulation engineers w",
+  "text": "{\n  \"claims\": [\n    {\n      \"claim\": \"NVIDIA expanded the Cosmos platform to help physical AI systems understand and simulate the real world.\",\n      \"sourceUrl\": \"https://blogs.nvidia.com/blog/cosmos-open-train-evaluate-deploy-world-models\",\n      \"excerpt\": \"help physical AI systems understand and simulate the real world, NVIDIA has expanded the Cosmos platform\"\n    },\n    {\n      \"claim\": \"Cosmos 3 Nano model variants for simulation enable developers to test autonomous policies in repeatable scenarios.\",\n      \"sourceUrl\": \"https://blogs.nvidia.com/blog/cosmos-open-train-evaluate-deploy-world-models\",\n      \"excerpt\": \"New Cosmos 3 Nano model variants for simulation enable developers to test autonomous policies in repeatable, hard-to-capture, multiview multisensor scenarios.\"\n    },\n    {\n      \"claim\": \"Cosmos Data Factory blueprints include Event Video Generation, which turns still images into synthetic videos of rare or unsafe events.\",\n      \"sourceUrl\": \"https://blogs.nvidia.com/blog/cosmos-open-train-evaluate-deploy-world-models\",\n      \"excerpt\": \"Event Video Generation: Turns still images into synthetic videos of rare or unsafe events.\"\n    },\n    {\n      \"claim\": \"Cosmos NIM microservices deliver up to 2x faster inference with no quality loss in validated configurations.\",\n      \"sourceUrl\": \"https://blogs.nvidia.com/blog/cosmos-open-train-evaluate-deploy-world-models\",\n      \"excerpt\": \"deliver up to 2x faster inference with no quality loss in validated configurations\"\n    }\n  ]\n}",
+  "tokensIn": 1570,
+  "tokensOut": 369,
+  "createdAt": "2026-10-22T08:27:33.137Z"
+}

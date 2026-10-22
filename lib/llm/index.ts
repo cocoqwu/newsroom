@@ -26,6 +26,15 @@ export function modelFor(role: "triage" | "draft"): string {
   return role === "triage" ? defaultModels.triage : defaultModels.draft;
 }
 
+// If the preferred model is overloaded or rate-limited, the next one in the chain takes the call.
+// All of these have a free tier. The last resort for drafting is the triage model.
+export function modelChain(role: "triage" | "draft"): string[] {
+  const chain = role === "draft"
+    ? [defaultModels.draft, "gemini-3.6-flash", "gemini-2.5-flash", defaultModels.triage]
+    : [defaultModels.triage, "gemini-3.1-flash-lite", "gemini-2.5-flash-lite"];
+  return [...new Set(chain)];
+}
+
 type CallOpts<T> = GenerateOpts & { fallback: () => T };
 
 function logCall(opts: GenerateOpts, r: Omit<GenerateResult, "text">, ok: boolean, error?: string) {
@@ -61,14 +70,18 @@ export async function generateText(opts: GenerateOpts & { fallback: () => string
   if (mode === "live") {
     const g = getGemini();
     if (g) {
-      try {
-        const r = await g.generate(opts, model);
-        logCall(opts, r, true);
-        record(opts, r);
-        return { text: r.text, provider: "gemini", model };
-      } catch (e) {
-        lastError = (e as Error).message;
-        console.warn(`[llm] ${opts.task} on ${model} failed: ${lastError.slice(0, 160)}`);
+      for (const m of modelChain(opts.role)) {
+        try {
+          const r = await g.generate(opts, m);
+          logCall(opts, r, true, m !== model ? `fallback from ${model}: ${lastError ?? ""}`.slice(0, 300) : undefined);
+          record(opts, r);
+          return { text: r.text, provider: "gemini", model: m };
+        } catch (e) {
+          lastError = (e as Error).message;
+          console.warn(`[llm] ${opts.task} on ${m} failed: ${lastError.slice(0, 160)}`);
+          // A zero free-tier quota or an invalid request will not improve with another model of the same kind.
+          if (/API key not valid|PERMISSION_DENIED/.test(lastError)) break;
+        }
       }
     } else {
       lastError = "GEMINI_API_KEY not set";

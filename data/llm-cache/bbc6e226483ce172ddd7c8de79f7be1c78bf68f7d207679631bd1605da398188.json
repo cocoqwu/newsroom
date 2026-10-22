@@ -1,0 +1,9 @@
+{
+  "task": "research",
+  "model": "gemini-3.5-flash-lite",
+  "promptPreview": "Post: Evaluating NVIDIA Cosmos for Real-World Robotics Pipelines\nThesis: World models have shifted from speculative academic architectures into concrete infrast",
+  "text": "{\n  \"claims\": [\n    {\n      \"claim\": \"The NVIDIA Cosmos platform has expanded to provide data blueprints and checkpoints that rank on six different open models leaderboards.\",\n      \"sourceUrl\": \"https://blogs.nvidia.com/blog/cosmos-open-train-evaluate-deploy-world-models\",\n      \"excerpt\": \"Ranking top five on six different open models leaderboards, the NVIDIA Cosmos platform gives world model builders the frontier open models\"\n    }\n  ]\n}",
+  "tokensIn": 1610,
+  "tokensOut": 107,
+  "createdAt": "2026-10-22T08:36:13.545Z"
+}

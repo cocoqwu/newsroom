@@ -57,8 +57,9 @@ export class GeminiProvider implements LLMProvider {
       };
     };
 
-    // Up to 3 tries on rate limits / transient errors, with growing waits.
-    const delays = [20000, 45000];
+    // Retries: rate limits (429) wait for the minute window; "high demand" (503) spikes are
+    // brief, so retry quickly. After that the caller moves on to the next model in the chain.
+    const delaysFor = (status?: number) => (status === 429 ? [20000] : [3000]);
     for (let i = 0; ; i++) {
       try {
         return await schedule(model, attempt);
@@ -69,6 +70,7 @@ export class GeminiProvider implements LLMProvider {
         const retryable = status === 429 || status === 503 || status === 500;
         // Free tier with a zero quota for this model: retrying will not help.
         const hardBlock = /limit:\s*0/.test(msg);
+        const delays = delaysFor(status);
         if (!retryable || hardBlock || i >= delays.length) {
           throw new ProviderError(msg.slice(0, 400), status, retryable && !hardBlock);
         }

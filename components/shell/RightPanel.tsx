@@ -1,13 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { AssistantPanel } from "./AssistantPanel";
+import { useAssistant } from "@/lib/assistant-store";
 import { ExternalLink } from "lucide-react";
 import { SectionLabel } from "./SectionLabel";
 
 // Right panel with Assistant / Links tabs, mirroring the live site's right column.
 // The Assistant tab becomes live on the Draft screen (milestone 3); elsewhere it explains the page.
-export function RightPanel({ assistant }: { assistant?: React.ReactNode }) {
-  const [tab, setTab] = useState<"assistant" | "links">(assistant ? "assistant" : "links");
+export function RightPanel() {
+  const a = useAssistant();
+  const [tab, setTab] = useState<"assistant" | "links">("links");
+  // The Draft screen registers itself in the assistant store; switch to the Assistant tab then.
+  useEffect(() => { setTab(a.draftId ? "assistant" : "links"); }, [a.draftId]);
   return (
     <aside className="sticky top-0 hidden h-screen flex-col bg-page px-5 py-3 lg:flex">
       <div className="flex items-center justify-end gap-1">
@@ -46,19 +51,9 @@ export function RightPanel({ assistant }: { assistant?: React.ReactNode }) {
           </p>
         </div>
       ) : (
-        <div className="mt-6 flex min-h-0 flex-1 flex-col">{assistant ?? <AssistantPlaceholder />}</div>
+        <div className="mt-6 flex min-h-0 flex-1 flex-col">{<AssistantPanel />}</div>
       )}
     </aside>
   );
 }
 
-function AssistantPlaceholder() {
-  return (
-    <div>
-      <SectionLabel className="mb-3">Assistant</SectionLabel>
-      <p className="text-[13px] leading-5 text-text-2">
-        On the Draft screen, select any text and ask for a change here. Untouched sections stay as they are.
-      </p>
-    </div>
-  );
-}
