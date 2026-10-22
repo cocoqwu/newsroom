@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Environment files: never commit secrets. .env.example documents every setting.
+.env.local
+.env*.local
+
+# OS and editor files
+.DS_Store
+*.log
