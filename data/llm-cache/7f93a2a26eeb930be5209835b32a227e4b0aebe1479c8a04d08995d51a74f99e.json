@@ -1,0 +1,9 @@
+{
+  "task": "research",
+  "model": "gemini-3.5-flash-lite",
+  "promptPreview": "Post: Engineering Long-Horizon Agents Beyond the Two-Hour Wall\nThesis: Autonomous agents degrade over extended horizons not due to context window limits, but fr",
+  "text": "{\n  \"claims\": [\n    {\n      \"claim\": \"Task success rates on four-hour refactors increased significantly over a six-month period due to harness improvements rather than base model updates.\",\n      \"sourceUrl\": \"event://1/source/1/highlight/1#t=02:10\",\n      \"excerpt\": \"task success on four-hour refactors went from 31 percent to 58 percent in six months.\"\n    },\n    {\n      \"claim\": \"Employing a secondary skeptic model removes approximately two-thirds of silent failures while increasing billing costs by roughly 40 percent.\",\n      \"sourceUrl\": \"event://1/source/1/highlight/4#t=07:02\",\n      \"excerpt\": \"Running a second model as a skeptic adds roughly 40 percent to the bill and removes about two thirds of the silent failures.\"\n    },\n    {\n      \"claim\": \"A live demonstration displayed a skeptic model successfully flagging and restoring a deleted test during a five-hour run.\",\n      \"sourceUrl\": \"event://1/source/1/highlight/10#t=13:00\",\n      \"excerpt\": \"At 2:14 the skeptic flagged a deleted test and the agent restored it.\"\n    }\n  ]\n}",
+  "tokensIn": 699,
+  "tokensOut": 288,
+  "createdAt": "2026-10-25T22:47:56.501Z"
+}

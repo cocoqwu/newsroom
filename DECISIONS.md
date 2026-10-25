@@ -127,3 +127,26 @@ Decisions 4 and 5 above are **superseded** by 7 to 10.
 ### 24. Chain adjusted after the final run
 - `gemini-2.5-flash` returned 404 "no longer available to new users", so the draft chain is now 3.8 Flash → 3.6 Flash → 3.7 Flash → Flash-Lite, and a 404 puts a model on cooldown like a spent quota.
 - One model output carried a control character inside "Lovász"; it was cleaned in the database by hand. Roadmap item: strip control characters from model text in the provider layer.
+
+## Event Capture branch (Oct 25, 2026)
+
+### 25. Event evidence rides the existing research-note rail
+- **Chose:** a starred highlight attached to a draft becomes a `research_notes` row whose source URL is `event://{event}/source/{source}/highlight/{id}#t={timestamp}`. Research keeps those rows, the writer sees them as claims, the fact-checker sees them as evidence, and the renderer turns the URL into a link to the highlight card.
+- **Why:** no new concept for the draft flow to learn; the fact-check panel "treats the transcript timestamp as the source" for free.
+- **Alternative:** a separate evidence table and a second prompt section. More code, same effect.
+
+### 26. Consent is enforced in three places, not one
+- **Chose:** the attach step tags each note "[direct quote allowed]" or "[paraphrase only, no direct quote]" and drops off-the-record speakers entirely; the writer's system prompt forbids quoting a paraphrase-only note; the fact-checker flags any such quotation as "corrected". Every highlight card shows the speaker's current permission, and changing a permission applies to all cards at once.
+- **Why:** a single prompt rule is not a guarantee. Belt, braces and a checker.
+- **Default:** paraphrase only, as the spec asks, so nothing is quotable until someone says so.
+
+### 27. Boosts are narrow and re-rank the digest
+- **Chose:** a starred highlight boosts a Today story only with a shared theme tag plus two specific shared words, or four shared words; at most eight stories per event; theme fit +0.15 and event tie-in +0.5; the run is re-ranked by the new totals; the signal note says which event caused it. Un-starring restores the base values.
+- **Why:** the first version matched 76 of 269 stories on the word "agent". That is noise, not a signal.
+
+### 28. Transcription limits
+- **Chose:** inline upload under 18 MB, the Files API up to 100 MB, three Flash models tried in turn, and any failure saved as a source in "failed" state with a plain message asking for a transcript. Demo mode never transcribes.
+- **Why:** the free-tier key is rate-limited and no audio was available to test at scale tonight; the UI must degrade to "paste a transcript" without losing the upload.
+
+### 29. The sample event is fictional and says so
+- **Chose:** a panel transcript written for this project with invented speakers, companies and numbers, marked "sample · fictional" in the list, on the event page and inside the transcript itself. Three speakers cover the three consent levels so the demo shows all three behaviors.

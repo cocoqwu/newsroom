@@ -1,7 +1,7 @@
 # Morning report: Newsroom
 
 Updated after every milestone so it is accurate even if the build stopped early.
-Last update: **after milestone 5** (final pass). Build exits 0; the full pipeline command ran end to end three times tonight.
+Last update: **Event Capture branch** (`event-capture`, Oct 25, 2026). Build exits 0 on the branch; the Events flow ran end to end on the sample event; Today, Draft and Publish still work; demo mode includes the sample event.
 
 ## Status at a glance
 
@@ -12,6 +12,47 @@ Last update: **after milestone 5** (final pass). Build exits 0; the full pipelin
 | 3. Draft flow (outline, cited draft, fact-check, images) | **Done** |
 | 4. Publish screen, demo mode, README | **Done** |
 | 5. Final pass and demo script | **Done** |
+
+## Event Capture (branch `event-capture`)
+
+What it does: an **Events** entry in the sidebar. Create an event with speakers and their quote
+permission; add sources by pasting text, uploading .txt/.vtt/.srt/.md transcripts, or uploading
+mp3/m4a/wav/mp4 recordings; extract 8 to 15 highlight cards per source (speaker, timestamp, type,
+quote under 25 words, paraphrase, theme tags); star, edit or reject them; attach starred highlights
+to an existing draft as cited evidence or start an event-recap draft; starred highlights boost
+matching Today stories.
+
+Verified live on the sample event (fictional panel, four speakers covering the three consent
+levels):
+- Extraction: 10 highlights from the transcript, every speaker matched to the right consent badge
+  (Gemini, recorded for demo replay).
+- Uploads: a .vtt parsed into timestamped lines; a 30-second WAV made with the Mac's speech
+  synthesizer was transcribed by Gemini audio understanding (3.8 Flash overloaded, 3.6 Flash
+  answered) with the numbers intact. The temporary test event was removed afterwards.
+- Consent: attaching 5 starred highlights to the KLS draft added 4 (3 quotable, 1 paraphrase only)
+  and held back the off-the-record speaker's. The KLS draft's Fact-check tab lists them with
+  timestamps. The recap draft (1,278 words) never mentions the off-the-record speaker, uses the
+  paraphrase-only speaker's point without quoting, and links four transcript timestamps. Its
+  fact-check verified 5 claims against the transcript and flagged 5 invented narrative details as
+  unverified, which the preview highlights.
+- Boosts: starring moved 8 harness-related stories; "Harness Scaling for Generalizable Agentic
+  RL" went from rank 4 to 2, and each boosted story's breakdown names the event. The first
+  version boosted 76 stories on the word "agent"; it now needs real word overlap (DECISIONS #27).
+- Build exit code 0; lint clean; Today, Drafts, Publish, Preview, Style tile all return 200.
+
+Screenshots: `m6-events-list.png`, `m6-event-detail.png`, `m6-draft-event-evidence.jpg`,
+`m6-recap-draft.png`, `m6-recap-preview.png`, `m6-today-boosted.png`.
+
+Not done or mocked on this branch:
+- No real audio longer than 30 seconds was tested; files over 18 MB take the Files API path, which
+  is written but untested. Failures fall back to "paste a transcript" in the UI.
+- Demo mode does not transcribe recordings (no network); transcript files and pasted text work,
+  and the sample event's extraction replays from the recording.
+- Highlights are per source; there is no merge across two recordings of the same session yet.
+
+How to see it: `git checkout event-capture`, then the usual demo steps (`npm run demo:load`,
+`npm run demo`) and open Events in the sidebar. The sample event has 5 starred highlights, the KLS
+draft has them attached, and draft 5 is the recap.
 
 ## Final state (milestone 5)
 

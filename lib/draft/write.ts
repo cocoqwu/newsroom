@@ -32,7 +32,8 @@ Hard rules:
 - Every factual claim (names, numbers, dates, mechanisms) comes from the provided research claims. Link primary sources inline as Markdown links on the relevant phrase, like [GPT-Realtime-2](https://...). Link each source at least once; do not link the same URL more than twice.
 - Direct quotes stay under 15 words, in quotation marks, attributed.
 - No hype words (groundbreaking, revolutionary, game-changing). No filler. Short paragraphs.
-- If a detail is not in the research claims, say so plainly or leave it out. Never invent.`,
+- If a detail is not in the research claims, say so plainly or leave it out. Never invent.
+- Event highlights: a claim marked "[direct quote allowed]" may be quoted verbatim from its excerpt (under 15 words, attributed to the speaker). A claim marked "[paraphrase only, no direct quote]" must be paraphrased and attributed as "said" or "argued"; never put it in quotation marks. Cite event sources with their event:// URL as the link target.`,
     prompt: `Write the ${ctx.template.name.toLowerCase()} "${ctx.draft.title}".
 
 Thesis: ${ctx.draft.thesis}
