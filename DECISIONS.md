@@ -150,3 +150,7 @@ Decisions 4 and 5 above are **superseded** by 7 to 10.
 
 ### 29. The sample event is fictional and says so
 - **Chose:** a panel transcript written for this project with invented speakers, companies and numbers, marked "sample · fictional" in the list, on the event page and inside the transcript itself. Three speakers cover the three consent levels so the demo shows all three behaviors.
+
+### 30. demo:load refuses to run while the app holds the database
+- **What happened:** a load during a running server corrupted the SQLite file (two processes rewriting every table through the WAL at once). Rebuilt from the committed snapshot; integrity check passes.
+- **Chose:** the load script checks for another process holding the file (via lsof) and stops with the exact fix. The snapshot remains the source of truth for the demo.

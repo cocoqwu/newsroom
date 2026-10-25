@@ -225,6 +225,12 @@ If the network or the API fails live, switch to demo mode: stop the server, `npm
 
 ## What failed
 
+- Running `npm run demo:load` while the app was still running corrupted the local database once
+  (SQLite reported a malformed image). The snapshot JSON was untouched, so the database was rebuilt
+  from it in seconds and passes `integrity_check`. `demo:load` now refuses to run while another
+  process holds the database and tells you to stop the server first. Order on demo day: load,
+  then start.
+
 - `gemini-2.5-flash` is "no longer available to new users" (404) on this key; removed from the
   fallback chain in favor of 3.7 Flash. The chain now also puts a 404 model on cooldown.
 - The fact-check for the demo draft ran on Flash-Lite (3.8 quota out, 3.6 overloaded at that

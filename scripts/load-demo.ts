@@ -9,7 +9,19 @@ loadEnvLocal();
 
 type Row = Record<string, unknown>;
 
+function dbInUse(dbFile: string): string | null {
+  // Loading while the app holds the file open can corrupt it. Refuse, with the fix spelled out.
+  try {
+    const { execFileSync } = require("node:child_process") as typeof import("node:child_process");
+    const out = execFileSync("lsof", ["-t", dbFile], { stdio: ["ignore", "pipe", "ignore"] }).toString().trim();
+    return out ? out.split("\n")[0] : null;
+  } catch { return null; } // lsof missing or no holders
+}
+
 async function main() {
+  const dbFile = process.env.DB_PATH || path.join(process.cwd(), "data", "newsroom.db");
+  const holder = dbInUse(dbFile);
+  if (holder) throw new Error(`The database is open by another process (pid ${holder}), probably the dev server. Stop it first (Ctrl-C or: pkill -f "next dev"), run npm run demo:load, then start the app again.`);
   const file = path.join(process.cwd(), "data", "demo-snapshot.json");
   if (!fs.existsSync(file)) throw new Error("data/demo-snapshot.json not found; run npm run demo:save after a live pipeline run");
   const snap = JSON.parse(fs.readFileSync(file, "utf8")) as Record<string, unknown> & { run: Row; snapshotOf: string };
