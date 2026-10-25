@@ -21,6 +21,7 @@ export type WorkspaceProps = {
   images: { id: number; kind: string; label: string; svg: string | null; dataUrl: string | null; status: string; note: string | null }[];
   versions: { version: number; note: string | null; createdAt: string; words: number }[];
   researchCount: number;
+  eventEvidence: { id: number; claim: string; excerpt: string | null; eventId: number; highlightId: number; timestamp: string | null }[];
   dateLabel: string;
   demo: boolean;
 };
@@ -251,6 +252,20 @@ export function DraftWorkspace(p: WorkspaceProps) {
                 <span>{p.claims.length} claims checked against {p.researchCount} research notes by a separate model call.</span>
                 <Button variant="ghost" size="xs" onClick={() => simple("factcheck", "factcheck")} disabled={busy !== null}>{busy === "factcheck" ? "Checking…" : "Re-run fact-check"}</Button>
               </div>
+              {p.eventEvidence.length ? (
+                <div className="border-b border-fill px-4 py-3">
+                  <div className="section-label mb-2">Event evidence attached · {p.eventEvidence.length}</div>
+                  <ul className="flex flex-col gap-1.5 text-[12px]">
+                    {p.eventEvidence.map((e) => (
+                      <li key={e.id} className="flex items-start gap-2">
+                        <a href={`/events/${e.eventId}#h${e.highlightId}`} target="_blank" rel="noreferrer" className="num shrink-0 text-text-2 hover:text-text">{e.timestamp ?? "–:–"}</a>
+                        <span className="text-text-2">{e.claim.replace(/ \[(direct quote allowed|paraphrase only, no direct quote)\]$/, "")}{/\[direct quote allowed\]/.test(e.claim) ? <span className="ml-1 text-verified">quotable</span> : <span className="ml-1 text-corrected">paraphrase only</span>}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-2 text-[11px] text-text-3">These count as sources for the fact-check and the next rewrite. Re-run the fact-check to check the draft against them.</p>
+                </div>
+              ) : null}
               {p.claims.length === 0 ? <p className="px-4 py-6 text-[13px] text-text-3">No fact-check yet.</p> : (
                 <ul className="divide-y divide-fill">
                   {p.claims.map((c) => (
@@ -263,7 +278,9 @@ export function DraftWorkspace(p: WorkspaceProps) {
                         <div className="text-text">“{c.text}”</div>
                         {c.correction ? <div className="mt-1 text-corrected">Correction: {c.correction}</div> : null}
                         {c.note ? <div className="mt-1 text-[12px] text-text-3">{c.note}</div> : null}
-                        {c.sourceUrl ? <a href={c.sourceUrl} target="_blank" rel="noreferrer" className="mt-1 inline-flex items-center gap-1 text-[12px] text-text-2 hover:text-text"><ExternalLink className="size-3" />{c.sourceUrl.replace(/^https?:\/\//, "").slice(0, 70)}</a> : null}
+                        {c.sourceUrl ? (() => { const ev = c.sourceUrl.match(/^event:\/\/(\d+)\/source\/\d+\/highlight\/(\d+)(?:#t=(.+))?$/); return ev
+                          ? <a href={`/events/${ev[1]}#h${ev[2]}`} target="_blank" rel="noreferrer" className="mt-1 inline-flex items-center gap-1 text-[12px] text-text-2 hover:text-text"><ExternalLink className="size-3" />Event transcript{ev[3] ? ` · ${ev[3]}` : ""} (highlight {ev[2]})</a>
+                          : <a href={c.sourceUrl} target="_blank" rel="noreferrer" className="mt-1 inline-flex items-center gap-1 text-[12px] text-text-2 hover:text-text"><ExternalLink className="size-3" />{c.sourceUrl.replace(/^https?:\/\//, "").slice(0, 70)}</a>; })() : null}
                       </div>
                     </li>
                   ))}

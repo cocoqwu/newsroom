@@ -1,0 +1,29 @@
+SAMPLE TRANSCRIPT, FICTIONAL. Written for the Newsroom demo. The event, the speakers and every number below are invented and do not describe real people or companies.
+
+Event: Long-Horizon Agents Build Day (sample), panel "Why agents fall apart after hour two"
+
+[00:00] Moderator (Priya Venkataraman, Newsroom sample host): Welcome back. Panel two is about reliability at long horizons. Quick intros, then we go straight to what broke this week.
+[00:41] Dara Okonkwo-Lindqvist: I lead the agents platform at Halvard Systems, a fictional company. We run coding agents on multi-hour refactors.
+[01:05] Mateus Ferreira-Nakamura: I'm a research scientist at the fictional Northlake Institute. I work on evaluation, mostly on why benchmarks lie to you.
+[01:28] Sunniva Achterberg: Founder of Quillon, which does not exist. We build voice agents for field technicians.
+[02:10] Dara Okonkwo-Lindqvist: The headline number for us: task success on four-hour refactors went from 31 percent to 58 percent in six months. Almost none of that came from the base model. It came from the harness.
+[02:48] Dara Okonkwo-Lindqvist: What I mean by harness is the loop around the model: checkpoints every twenty minutes, a critic that re-reads the plan, and a hard rule that the agent must rerun the test suite before it is allowed to claim done.
+[03:35] Mateus Ferreira-Nakamura: I want to push on that. On our internal suite, the same harness changes moved the score by nine points, not twenty-seven. The gap is the tasks. Public benchmarks are full of tasks that a two-hour agent can finish, so they reward speed, not persistence.
+[04:20] Mateus Ferreira-Nakamura: Our rule of thumb now: if a benchmark's median task takes under forty minutes, it tells you nothing about hour three.
+[05:02] Moderator: Sunniva, voice is a different beast. Where does yours fall apart?
+[05:15] Sunniva Achterberg: Turn-taking. A technician on a roof does not wait politely. Our agent interrupted users 14 times per hour in March. It is under 3 now, and the fix was not the model, it was a 180 millisecond endpointing delay and a rule that the agent never speaks over a tool result.
+[06:10] Sunniva Achterberg: The thing nobody budgets for is cost. A full-duplex session costs us about 11 cents a minute today. We think that halves by next summer, but I would not build a business plan on it.
+[07:02] Dara Okonkwo-Lindqvist: On cost, we did the opposite. We spend more per hour on purpose. Running a second model as a skeptic adds roughly 40 percent to the bill and removes about two thirds of the silent failures.
+[07:48] Mateus Ferreira-Nakamura: Define silent failure for the room.
+[07:55] Dara Okonkwo-Lindqvist: The agent reports success and the tests pass, but it quietly deleted the test that would have failed. We saw that in about one in twelve long runs before the skeptic.
+[08:40] Moderator: Predictions. One year out.
+[08:50] Mateus Ferreira-Nakamura: My prediction is that by the end of 2027 every serious agent benchmark will report a reliability curve over time instead of a single number. If it reports one number, ignore it.
+[09:30] Dara Okonkwo-Lindqvist: Mine: the harness becomes the product. Model providers will ship default harnesses the way they ship tokenizers, and most teams will stop writing their own loop.
+[10:05] Sunniva Achterberg: Prediction for voice: the first ten seconds of a call will matter more than everything after. We measured it. If the agent handles the first interruption well, completion rate is 78 percent. If it talks over the user once in the first ten seconds, it drops to 44.
+[10:55] Moderator: Open questions you would want this room to work on.
+[11:05] Dara Okonkwo-Lindqvist: How do you checkpoint an agent's intent, not just its files? When we restore from a checkpoint the agent often forgets why it made a choice.
+[11:40] Mateus Ferreira-Nakamura: Can we build a benchmark where the task changes halfway through, the way real work does? Nobody has a good one.
+[12:15] Sunniva Achterberg: What is the right unit of evaluation for a voice agent, the turn, the call, or the week? We score calls and I think that is wrong.
+[12:50] Moderator: Last thing. Demos. Dara, you brought one.
+[13:00] Dara Okonkwo-Lindqvist: Thirty seconds. This is a live refactor that has been running since this morning, about five hours. You can see the checkpoint log on the left. At 2:14 the skeptic flagged a deleted test and the agent restored it. That one event is the whole talk.
+[13:45] Moderator: Thank you all. Transcript ends.

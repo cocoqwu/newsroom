@@ -33,6 +33,10 @@ async function main() {
     ["llmCalls", schema.llmCalls, ["createdAt"]],
     ["pastPosts", schema.pastPosts, ["fetchedAt"]],
     ["settings", schema.settings, ["updatedAt"]],
+    ["events", schema.events, ["createdAt"]],
+    ["speakers", schema.speakers, []],
+    ["eventSources", schema.eventSources, ["createdAt"]],
+    ["highlights", schema.highlights, ["createdAt"]],
   ] as const;
 
   db.transaction((tx) => {
@@ -54,7 +58,7 @@ async function main() {
     tx.insert(schema.settings).values({ key: "last_run_id", value: String(snap.run.id), updatedAt: new Date().toISOString() }).onConflictDoUpdate({ target: schema.settings.key, set: { value: String(snap.run.id) } }).run();
   });
   const n = (k: string) => ((snap[k] as Row[]) ?? []).length;
-  console.log(`loaded demo snapshot of ${snap.snapshotOf.slice(0, 10)}: ${n("stories")} stories, ${n("items")} items, ${n("drafts")} drafts, ${n("claims")} claims, ${n("images")} images. Dates ${keepDates ? "kept" : "shifted to today"}.`);
+  console.log(`loaded demo snapshot of ${snap.snapshotOf.slice(0, 10)}: ${n("stories")} stories, ${n("items")} items, ${n("drafts")} drafts, ${n("claims")} claims, ${n("images")} images. Dates ${keepDates ? "kept" : "shifted to today"}. Events: ${n("events")}, highlights: ${n("highlights")}.`);
   console.log("Start the app with: npm run demo   (NEWSROOM_MODE=demo replays recorded model responses)");
 }
 main().then(() => process.exit(0)).catch((e) => { console.error(e); process.exit(1); });

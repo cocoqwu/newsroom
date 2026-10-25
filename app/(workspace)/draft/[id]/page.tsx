@@ -19,7 +19,9 @@ export default async function DraftPage({ params }: { params: Promise<{ id: stri
   const claims = db.select().from(schema.claims).where(eq(schema.claims.draftId, draftId)).all();
   const images = db.select().from(schema.images).where(eq(schema.images.draftId, draftId)).all();
   const versions = db.select().from(schema.draftVersions).where(eq(schema.draftVersions.draftId, draftId)).orderBy(asc(schema.draftVersions.version)).all();
-  const researchCount = db.select().from(schema.researchNotes).where(eq(schema.researchNotes.draftId, draftId)).all().length;
+  const notes = db.select().from(schema.researchNotes).where(eq(schema.researchNotes.draftId, draftId)).all();
+  const researchCount = notes.length;
+  const eventEvidence = notes.filter((n) => n.sourceUrl.startsWith("event://")).map((n) => { const m = n.sourceUrl.match(/^event:\/\/(\d+)\/source\/\d+\/highlight\/(\d+)(?:#t=(.+))?$/); return { id: n.id, claim: n.claim, excerpt: n.excerpt, eventId: m ? Number(m[1]) : 0, highlightId: m ? Number(m[2]) : 0, timestamp: m?.[3] ?? null }; });
   const rendered = draft.bodyMd ? renderMarkdown(draft.bodyMd, claims) : { html: "", toc: [] };
   let outline: { heading: string; bullets: string[] }[] = [];
   try { outline = draft.outline ? JSON.parse(draft.outline) : []; } catch { outline = []; }
@@ -36,6 +38,7 @@ export default async function DraftPage({ params }: { params: Promise<{ id: stri
         images={images.map((i) => ({ id: i.id, kind: i.kind, label: i.label, svg: i.svg, dataUrl: i.dataUrl, status: i.status, note: i.note }))}
         versions={versions.map((v) => ({ version: v.version, note: v.note, createdAt: v.createdAt, words: wordCount(v.bodyMd) })).reverse()}
         researchCount={researchCount}
+        eventEvidence={eventEvidence}
         dateLabel={dateLabel}
         demo={process.env.NEWSROOM_MODE === "demo"}
       />

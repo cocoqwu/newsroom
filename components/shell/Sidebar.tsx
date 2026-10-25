@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calendar, Newspaper, FileText, Send, Palette, PanelLeft, Search } from "lucide-react";
+import { Calendar, Newspaper, FileText, Send, Palette, PanelLeft, Search, Mic } from "lucide-react";
 import { SectionLabel } from "./SectionLabel";
 
 const newsroomNav = [
   { href: "/today", label: "Today", icon: Newspaper },
   { href: "/drafts", label: "Drafts", icon: FileText },
   { href: "/publish", label: "Publish", icon: Send },
+  { href: "/events", label: "Events", icon: Mic },
 ];
 
 function NavItem({ href, label, icon: Icon, active, external }: { href: string; label: string; icon: React.ComponentType<{ className?: string }>; active?: boolean; external?: boolean }) {
@@ -50,7 +51,7 @@ export function Sidebar() {
       </button>
 
       <nav className="mt-4 flex flex-col gap-0.5">
-        <NavItem href="https://www.agihouse.org/events" label="Events" icon={Calendar} external />
+        <NavItem href="https://www.agihouse.org/events" label="AGI House events" icon={Calendar} external />
       </nav>
 
       <SectionLabel className="mt-6 mb-2 px-2.5">Newsroom</SectionLabel>

@@ -161,3 +161,52 @@ export const settings = sqliteTable("settings", {
   value: text("value").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
+
+// ---- Event Capture: in-person talks, panels and demos become highlights that feed posts ----
+
+export const events = sqliteTable("events", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  date: text("date"), // YYYY-MM-DD
+  description: text("description"),
+  isSample: integer("is_sample", { mode: "boolean" }).notNull().default(false),
+  createdAt: text("created_at").notNull(),
+});
+
+export const speakers = sqliteTable("speakers", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  eventId: integer("event_id").notNull(),
+  name: text("name").notNull(),
+  title: text("title"),
+  // approved = may be quoted directly; paraphrase = ideas only, no direct quotes; off = off the record
+  permission: text("permission").notNull().default("paraphrase"),
+});
+
+export const eventSources = sqliteTable("event_sources", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  eventId: integer("event_id").notNull(),
+  kind: text("kind").notNull(), // paste | transcript | audio | video
+  label: text("label").notNull(),
+  mime: text("mime"),
+  sizeBytes: integer("size_bytes"),
+  transcript: text("transcript"),
+  status: text("status").notNull().default("ready"), // ready | transcribing | failed
+  note: text("note"),
+  createdAt: text("created_at").notNull(),
+});
+
+export const highlights = sqliteTable("highlights", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  eventId: integer("event_id").notNull(),
+  sourceId: integer("source_id").notNull(),
+  speakerId: integer("speaker_id"),
+  speakerName: text("speaker_name"),
+  timestamp: text("timestamp"), // mm:ss or hh:mm:ss as spoken in the transcript
+  type: text("type").notNull(), // claim | number | prediction | demo | open_question
+  quote: text("quote").notNull(),
+  paraphrase: text("paraphrase").notNull(),
+  tags: text("tags"), // JSON string[] of theme ids
+  status: text("status").notNull().default("new"), // new | starred | rejected
+  edited: integer("edited", { mode: "boolean" }).notNull().default(false),
+  createdAt: text("created_at").notNull(),
+});

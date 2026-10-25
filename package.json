@@ -15,7 +15,8 @@
     "check:keys": "node scripts/check-keys.mjs",
     "typecheck": "tsc --noEmit",
     "demo": "NEWSROOM_MODE=demo next dev --port 3100",
-    "demo:start": "NEWSROOM_MODE=demo next start --port 3100"
+    "demo:start": "NEWSROOM_MODE=demo next start --port 3100",
+    "demo:seed-event": "tsx scripts/seed-sample-event.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

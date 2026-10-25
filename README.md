@@ -7,9 +7,9 @@ like [blog.agihouse.org](https://blog.agihouse.org). A pipeline collects, cluste
 day's stories; a human editor makes two calls, **which story to cover** and **whether the draft is
 ready**; the app drafts, fact-checks, illustrates and exports the post.
 
-| Today: ranked digest | Draft: outline → cited draft → fact-check | Publish: exports, mock Webflow send, snippets |
-|---|---|---|
-| ![Today](docs/screenshots/m5-today.png) | ![Draft](docs/screenshots/m3-blog-preview.png) | ![Publish](docs/screenshots/m4-publish.png) |
+| Today: ranked digest | Draft: outline → cited draft → fact-check | Publish: exports, mock Webflow send, snippets | Events: transcripts → highlights |
+|---|---|---|---|
+| ![Today](docs/screenshots/m5-today.png) | ![Draft](docs/screenshots/m3-blog-preview.png) | ![Publish](docs/screenshots/m4-publish.png) | ![Events](docs/screenshots/m6-event-detail.png) |
 
 ## What it does
 
@@ -37,6 +37,21 @@ ready**; the app drafts, fact-checks, illustrates and exports the post.
 9. **Publish.** Markdown and HTML export, the exact Webflow CMS payload that a real integration
    would send (mocked), and a newsletter blurb plus social posts from the final text.
 
+10. **Event capture** (branch `event-capture`). Much of what AGI House publishes starts at its
+    in-person events, so talks, panels and demos can feed posts too. Create an event with its
+    speakers, add sources by pasting text, uploading .txt/.vtt/.srt/.md transcripts, or uploading
+    mp3/m4a/wav/mp4 recordings (transcribed with Gemini audio understanding; if that fails or the
+    file is too large, the UI says so and asks for a transcript). Each source yields 8 to 15
+    highlight cards with speaker, timestamp, type (claim, number, prediction, demo, open
+    question), a quote under 25 words, a paraphrase and theme tags. The editor stars, edits or
+    rejects them. **Consent is enforced:** every speaker has a quote permission (approved,
+    paraphrase only, off the record; default paraphrase only), shown on every card; drafts never
+    quote an unapproved speaker and never use an off-the-record one. Starred highlights attach to
+    an existing draft as cited evidence (the fact-check treats the transcript timestamp as the
+    source) or start an event-recap draft through the normal outline approval. Starred highlights
+    also boost matching Today stories' theme fit and event tie-in, with the reason in the breakdown.
+    Demo mode ships one sample event with a fictional transcript, clearly labeled.
+
 Every editor action is logged, every model call is logged with tokens and list-price cost, and
 the Today screen shows the cost of the run.
 
@@ -53,7 +68,7 @@ npm run dev -- --port 3100            # open http://localhost:3100
 Demo mode, no network and no key needed:
 
 ```bash
-npm run demo:load                     # load the saved snapshot of one real day
+npm run demo:load                     # load the saved snapshot of one real day (includes the sample event)
 npm run demo                          # dev server with NEWSROOM_MODE=demo (recorded model responses)
 ```
 
@@ -68,6 +83,8 @@ npm run demo                          # dev server with NEWSROOM_MODE=demo (reco
 | Ranking judge, outline, research, draft, fact-check, revision, snippets | Real Gemini calls (Flash-Lite for triage, 3.8 Flash for drafting; the key is free tier so Pro is unavailable) |
 | Replay cache | Real: every response is recorded; demo mode replays them, and any failed call falls back to the cache, then to a heuristic |
 | SVG header images | Real, generated locally |
+| Event transcription (audio/video) | Real Gemini audio-understanding call, with a clear failure message asking for a transcript; demo mode skips it |
+| Event highlights, consent, attach, recap, boosts | Real; the sample event's transcript and speakers are fictional and labeled |
 | AI header image | Wired to Gemini's image model, but **not available on a free-tier key**; the card says so and shows the price it would cost |
 | Send to blog (Webflow) | **Mock**: the exact payload is shown, nothing is sent; needs a site token and collection id |
 | Cost per run | List prices from Google's pricing page; free-tier calls bill $0 |

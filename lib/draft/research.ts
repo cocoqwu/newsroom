@@ -13,7 +13,10 @@ type SourceText = { url: string; title: string; sourceName: string; text: string
 export async function researchDraft(draftId: number, log: (s: string) => void = console.log): Promise<{ sections: number; claims: number; pagesFetched: number }> {
   const ctx = loadDraftContext(draftId);
   touch(draftId, { status: "drafting" });
+  // Event highlights attached by the editor are evidence too; keep them and only refresh web research.
+  const eventNotes = db.select().from(schema.researchNotes).where(eq(schema.researchNotes.draftId, draftId)).all().filter((n) => n.sourceUrl.startsWith("event://"));
   db.delete(schema.researchNotes).where(eq(schema.researchNotes.draftId, draftId)).run();
+  for (const n of eventNotes) db.insert(schema.researchNotes).values({ draftId, section: n.section, claim: n.claim, sourceUrl: n.sourceUrl, excerpt: n.excerpt }).run();
 
   // 1. Fetch source pages (up to 8), in parallel, each with a timeout. Failures fall back to the stored summary.
   const sources: SourceText[] = await Promise.all(
@@ -31,7 +34,9 @@ export async function researchDraft(draftId: number, log: (s: string) => void = 
     })
   );
   const pagesFetched = sources.filter((s) => s.text.length > 300).length;
-  const corpus = sources.map((s, i) => `[S${i + 1}] ${s.title} (${s.sourceName})\nURL: ${s.url}\n${truncate(s.text, Math.floor(14000 / sources.length))}`).join("\n\n");
+  const corpusParts = sources.map((s, i) => `[S${i + 1}] ${s.title} (${s.sourceName})\nURL: ${s.url}\n${truncate(s.text, Math.floor(14000 / Math.max(1, sources.length)))}`);
+  if (eventNotes.length) corpusParts.push(`[EVENT] Highlights from an AGI House event (each line ends with its source URL; keep that URL when you cite it):\n${eventNotes.map((n) => `- ${n.claim} — ${n.excerpt ?? ""} URL: ${n.sourceUrl}`).join("\n")}`);
+  const corpus = corpusParts.join("\n\n");
 
   // 2. One claim-extraction call per section, run concurrently (the provider spaces them out).
   const results = await Promise.all(
@@ -56,8 +61,8 @@ export async function researchDraft(draftId: number, log: (s: string) => void = 
       count++;
     }
   }
-  log(`  research: ${count} claims across ${results.length} sections from ${pagesFetched} fetched pages`);
-  return { sections: results.length, claims: count, pagesFetched };
+  log(`  research: ${count} claims across ${results.length} sections from ${pagesFetched} fetched pages${eventNotes.length ? ` plus ${eventNotes.length} event highlights` : ""}`);
+  return { sections: results.length, claims: count + eventNotes.length, pagesFetched };
 }
 
 export function getResearchNotes(draftId: number) {

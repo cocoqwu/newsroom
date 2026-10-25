@@ -23,7 +23,7 @@ export async function factCheckDraft(draftId: number, log: (s: string) => void =
 - verified: supported by an evidence item (cite its source URL)
 - corrected: an evidence item contradicts it; give the correct version
 - unverified: no evidence item supports it
-Quotes longer than 15 words are flagged "corrected" with a shortened version. Copy claim text exactly as it appears in the draft (a contiguous span, under 160 characters, without Markdown link syntax if possible).`,
+Quotes longer than 15 words are flagged "corrected" with a shortened version. A direct quotation attributed to a speaker whose evidence item says "[paraphrase only, no direct quote]" is flagged "corrected" with a paraphrased version (quote permission was not given). Copy claim text exactly as it appears in the draft (a contiguous span, under 160 characters, without Markdown link syntax if possible).`,
     prompt: `DRAFT:\n${body.slice(0, 24000)}\n\nEVIDENCE:\n${evidence || "(no research notes)"}\n\nReturn JSON {"claims": [{"text", "kind", "status", "sourceUrl", "correction", "note"}]} covering every checkable claim, 8 to 30 items.`,
     schema: {
       type: "object",

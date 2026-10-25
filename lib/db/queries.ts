@@ -28,7 +28,8 @@ export function parseNotes(run: Run | null): RunNotes {
 
 // The digest: ranks 1-9 by score plus the wildcard, in display order. Also returns the rest for "more".
 export function getDigest(runId: number): { top: StoryWithItems[]; rest: StoryWithItems[] } {
-  const rows = db.select().from(schema.stories).where(eq(schema.stories.runId, runId)).orderBy(schema.stories.rank).all();
+  // Stories without a rank are synthetic (event recaps) and belong on Drafts, not in the digest.
+  const rows = db.select().from(schema.stories).where(eq(schema.stories.runId, runId)).orderBy(schema.stories.rank).all().filter((r) => r.rank !== null);
   const withItems = attachItems(rows);
   const wildcard = withItems.find((s) => s.isWildcard) ?? null;
   const top = withItems.filter((s) => (s.rank ?? 99) <= 9);

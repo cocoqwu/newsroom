@@ -27,10 +27,14 @@ async function main() {
   const llmCalls = db.select().from(schema.llmCalls).all().filter((c) => c.runId === run.id || (c.draftId && draftIds.includes(c.draftId)));
   const pastPosts = db.select().from(schema.pastPosts).all();
   const settings = db.select().from(schema.settings).all();
-  const snapshot = { savedAt: new Date().toISOString(), snapshotOf: run.startedAt, run, stories, storyItems, items, drafts, draftVersions, claims, researchNotes, images, editorActions, llmCalls, pastPosts, settings };
+  const events = db.select().from(schema.events).all();
+  const speakers = db.select().from(schema.speakers).all();
+  const eventSources = db.select().from(schema.eventSources).all();
+  const highlights = db.select().from(schema.highlights).all();
+  const snapshot = { events, speakers, eventSources, highlights, savedAt: new Date().toISOString(), snapshotOf: run.startedAt, run, stories, storyItems, items, drafts, draftVersions, claims, researchNotes, images, editorActions, llmCalls, pastPosts, settings };
   const out = path.join(process.cwd(), "data", "demo-snapshot.json");
   fs.writeFileSync(out, JSON.stringify(snapshot));
   const mb = (fs.statSync(out).size / 1e6).toFixed(1);
-  console.log(`saved ${out} (${mb} MB): run ${run.id} of ${run.startedAt}, ${stories.length} stories, ${items.length} items, ${drafts.length} drafts, ${claims.length} claims, ${images.length} images, ${llmCalls.length} model calls`);
+  console.log(`saved ${out} (${mb} MB): run ${run.id} of ${run.startedAt}, ${stories.length} stories, ${items.length} items, ${drafts.length} drafts, ${claims.length} claims, ${images.length} images, ${llmCalls.length} model calls, ${events.length} events / ${highlights.length} highlights`);
 }
 main().then(() => process.exit(0)).catch((e) => { console.error(e); process.exit(1); });

@@ -13,6 +13,7 @@ npm run check:keys           # one tiny call per model role, plus one image atte
 npm run pipeline             # full daily run: collect → cluster → rank → coverage memory (safe to rerun)
 npm run demo:load            # load the saved snapshot of one real day (dates shifted to today)
 npm run demo                 # dev server in demo mode: NEWSROOM_MODE=demo replays recorded model responses
+npm run demo:seed-event      # create the sample (fictional) event if missing
 npm run demo:save            # snapshot the latest live run + drafts into data/demo-snapshot.json
 npm run db:reset             # wipe data/newsroom.db
 scripts/dev-restart.sh       # restart the dev server safely (waits for port and db file to free up)
@@ -27,6 +28,9 @@ node scripts/screenshot.mjs <url> <out.png>   # 1440px PNG via local Chrome head
 - All model calls go through `lib/llm` (one provider interface; Gemini live, replay/mock fallback).
   Roles: triage = gemini-3.5-flash-lite, draft = gemini-3.8-flash, image = gemini-nano-banana-2.1.
   The key is free tier: Pro and image models are unavailable, so the AI image card is a placeholder.
+- Event capture in `lib/events` (transcripts, transcribe, highlights, consent, attach, boost) with
+  screens under `app/(workspace)/events`; event evidence enters drafts as research notes with
+  `event://` source URLs that the renderer turns into links to the highlight.
 - Pipeline in `lib/pipeline`; draft steps in `lib/draft` (outline → research → write → factcheck →
   revise); header images in `lib/images`; exports (Markdown, HTML, Webflow payload, snippets) in
   `lib/export`. Sources, editorial profile, ranking weights and prices live in `config/`.

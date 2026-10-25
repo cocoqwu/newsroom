@@ -28,7 +28,11 @@ export function renderMarkdown(md: string, claims: Claim[] = []): { html: string
     if (depth === 2) toc.push({ id, text: plainText });
     return `<h${depth} id="${id}">${text}</h${depth}>\n`;
   };
-  renderer.link = ({ href, title, text }) => `<a href="${href}" target="_blank" rel="noreferrer"${title ? ` title="${title}"` : ""}>${text}</a>`;
+  renderer.link = ({ href, title, text }) => {
+    const ev = href.match(/^event:\/\/(\d+)\/source\/(\d+)\/highlight\/(\d+)(?:#t=(.+))?$/);
+    const h = ev ? `/events/${ev[1]}#h${ev[3]}` : href;
+    return `<a href="${h}" target="_blank" rel="noreferrer"${title ? ` title="${title}"` : ev ? ` title="Event transcript${ev[4] ? ` at ${ev[4]}` : ""}"` : ""}>${text}</a>`;
+  };
   const html = marked.parse(highlightClaims(md, claims), { renderer, gfm: true, breaks: false }) as string;
   return { html, toc };
 }

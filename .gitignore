@@ -50,3 +50,5 @@ data/*.db-*
 .cache/
 # OS files
 .DS_Store
+# Uploaded recordings and transcripts (never committed)
+data/uploads/
