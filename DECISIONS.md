@@ -5,9 +5,9 @@ Format: what was chosen, why, and the alternative that was not taken.
 
 ## Pre-flight (Oct 21, 2026, evening, with Coco present)
 
-### 1. Project lives in `cs193v/projects/newsroom/`
-- **Chose:** a new `newsroom/` folder inside the projects directory the session was opened in, with its own git repo.
-- **Why:** the spec says "the project folder" without naming one, and the session's working directory was a parent folder holding several unrelated projects.
+### 1. Project lives in its own `newsroom/` folder
+- **Chose:** a new `newsroom/` folder with its own git repo, separate from any other work on the machine.
+- **Why:** the spec says "the project folder" without naming one, and the working directory at the time was a parent folder holding unrelated projects.
 - **Alternative:** the Downloads folder where SPEC.md was written. Rejected because Downloads is not a place for a repo.
 
 ### 2. Gemini replaces the Anthropic API for text models
